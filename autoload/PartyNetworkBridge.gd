@@ -3,6 +3,7 @@ extends Node
 signal peer_discovered(peer_id: int, peer_name: String, rssi: int)
 signal connected_to_table(local_id: int, is_host: bool)
 signal packet_received(sender_id: int, target_id: int, game_id: int, heading: int, seed_val: int, payload: PackedByteArray)
+signal lan_peer_connected(peer_ip: String)
 
 const PACKET_SIZE: int = 16
 const MOCK_BASE_PORT: int = 42420
@@ -23,6 +24,7 @@ var connected_peers: Dictionary = {} # { player_id: { "name": String, "heading":
 
 var _mock_udp: PacketPeerUDP = PacketPeerUDP.new()
 var _lan_udp: PacketPeerUDP = PacketPeerUDP.new()
+var _lan_peers: Dictionary = {}
 var _ble_plugin: Object = null
 
 func _ready() -> void:
@@ -36,6 +38,19 @@ func set_local_player_id(player_id: int) -> void:
 	local_player_id = clampi(player_id, 0, 7)
 	is_host = (local_player_id == 0)
 	connected_to_table.emit(local_player_id, is_host)
+
+func get_local_lan_ip() -> String:
+	for addr: String in IP.get_local_addresses():
+		if addr.contains(".") and not addr.begins_with("127.") and not addr.begins_with("169.254."):
+			return addr
+	return "127.0.0.1"
+
+func connect_lan_peer(peer_ip: String) -> void:
+	var clean_ip: String = peer_ip.strip_edges()
+	if clean_ip.is_empty():
+		return
+	_lan_peers[clean_ip] = true
+	send_packet(PacketType.CALIBRATION, 0xFF, 0, 0, 0, PackedByteArray())
 
 func _parse_cli_args() -> void:
 	for arg: String in OS.get_cmdline_user_args():
@@ -82,6 +97,11 @@ func _process(_delta: float) -> void:
 	elif is_lan_mode:
 		while _lan_udp.get_available_packet_count() > 0:
 			var raw: PackedByteArray = _lan_udp.get_packet()
+			var peer_ip: String = _lan_udp.get_packet_ip()
+			if not peer_ip.is_empty() and not _lan_peers.has(peer_ip):
+				_lan_peers[peer_ip] = true
+				lan_peer_connected.emit(peer_ip)
+				send_packet(PacketType.CALIBRATION, 0xFF, 0, 0, 0, PackedByteArray())
 			_on_raw_packet_arrived(raw)
 
 func send_packet(p_type: int, target_id: int, game_id: int, heading: int, seed_val: int, custom_payload: PackedByteArray) -> void:
@@ -116,6 +136,9 @@ func _dispatch_raw_packet(packet: PackedByteArray) -> void:
 		_ble_plugin.send_ble_packet(packet)
 
 func _broadcast_lan_packet(packet: PackedByteArray) -> void:
+	for peer_ip: String in _lan_peers.keys():
+		_lan_udp.set_dest_address(peer_ip, LAN_PORT)
+		_lan_udp.put_packet(packet)
 	var sent_targets: Dictionary = {}
 	for addr: String in IP.get_local_addresses():
 		if addr.contains(".") and not addr.begins_with("127.") and not addr.begins_with("169.254."):

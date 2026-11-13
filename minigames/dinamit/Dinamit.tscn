@@ -50,6 +50,30 @@ theme_override_font_sizes/font_size = 20
 text = "Oyuncu 0"
 horizontal_alignment = 1
 
+[node name="IpLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "IP: -"
+horizontal_alignment = 1
+
+[node name="LanBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PeerIpInput" type="LineEdit" parent="MarginContainer/VBoxContainer/LanBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Diğer cihaz IP (192.168.x.x)"
+
+[node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer/LanBar"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Bağla"
+
 [node name="FuseBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 28)

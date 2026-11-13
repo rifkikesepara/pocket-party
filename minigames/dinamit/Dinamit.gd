@@ -10,6 +10,10 @@ const MIN_FUSE_SEC: float = 8.0
 const MAX_FUSE_SEC: float = 16.0
 
 @onready var player_label: Label = %PlayerLabel
+@onready var ip_label: Label = %IpLabel
+@onready var lan_bar: HBoxContainer = %LanBar
+@onready var peer_ip_input: LineEdit = %PeerIpInput
+@onready var connect_button: Button = %ConnectButton
 @onready var status_label: Label = %StatusLabel
 @onready var holder_label: Label = %HolderLabel
 @onready var target_label: Label = %TargetLabel
@@ -27,7 +31,13 @@ func _ready() -> void:
 	game_title = "Dinamit (Sıcak Patates)"
 	super._ready()
 	PartyNetworkBridge.packet_received.connect(_on_pre_round_packet)
+	PartyNetworkBridge.lan_peer_connected.connect(_on_lan_peer_connected)
 	start_button.pressed.connect(_on_start_button_pressed)
+	connect_button.pressed.connect(_on_connect_button_pressed)
+
+	lan_bar.visible = PartyNetworkBridge.is_lan_mode
+	ip_label.visible = PartyNetworkBridge.is_lan_mode
+	ip_label.text = "IP: %s (Port 42425)" % PartyNetworkBridge.get_local_lan_ip()
 
 	selected_target_id = SensorGestureController.current_target_id
 	_refresh_ui()
@@ -43,6 +53,16 @@ func _process(delta: float) -> void:
 		var payload: PackedByteArray = PackedByteArray([ACTION_EXPLODE, holder_id])
 		send_game_action(TARGET_BROADCAST, payload)
 		_handle_explosion(holder_id)
+
+func _on_connect_button_pressed() -> void:
+	var ip: String = peer_ip_input.text.strip_edges()
+	if ip.is_empty():
+		return
+	PartyNetworkBridge.connect_lan_peer(ip)
+	status_label.text = "Ping gönderildi: %s" % ip
+
+func _on_lan_peer_connected(peer_ip: String) -> void:
+	status_label.text = "Bağlandı: %s" % peer_ip
 
 func _on_start_button_pressed() -> void:
 	if is_round_active:
