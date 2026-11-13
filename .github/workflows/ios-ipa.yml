@@ -44,8 +44,7 @@ jobs:
           mv addons/ble_ios/PocketPartyBLE.gdextension.ios addons/ble_ios/PocketPartyBLE.gdextension
           python3 -m venv /tmp/scons_venv
           /tmp/scons_venv/bin/pip install --quiet scons
-          git clone --depth 1 --branch 4.6-stable https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp \
-            || git clone --depth 1 --branch 4.5-stable https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp
+          git clone --depth 1 --branch 4.5 https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp
           mkdir -p addons/ble_ios/bin
           /tmp/scons_venv/bin/scons -C addons/ble_ios platform=ios target=template_release arch=arm64 -j$(sysctl -n hw.ncpu)
 
