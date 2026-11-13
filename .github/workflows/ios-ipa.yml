@@ -73,6 +73,8 @@ jobs:
               addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a \
               addons/ble_ios/godot-cpp/bin/libgodot-cpp.ios.template_release.arm64.a
             mv addons/ble_ios/bin/libPocketPartyBLE_merged.a addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a
+            lipo -info addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a
+            nm -g addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a | grep pocket_party_ble_library_init
           else
             echo "Using cached libPocketPartyBLE.ios.template_release.arm64.a"
           fi
