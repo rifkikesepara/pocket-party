@@ -25,19 +25,33 @@ jobs:
           echo "godot_version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "template_dir=${VERSION//-/.}" >> "$GITHUB_OUTPUT"
 
+      - name: Cache Godot & iOS Export Templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            /tmp/godot_app
+            ~/Library/Application Support/Godot/export_templates
+          key: macos-godot-ios-${{ steps.ver.outputs.godot_version }}
+
       - name: Download Godot & iOS Export Templates
         run: |
-          VER="${{ steps.ver.outputs.godot_version }}"
-          TPL_DIR="$HOME/Library/Application Support/Godot/export_templates/${{ steps.ver.outputs.template_dir }}"
-          mkdir -p "$TPL_DIR"
+          if [ "${{ steps.cache-godot.outputs.cache-hit }}" != "true" ]; then
+            VER="${{ steps.ver.outputs.godot_version }}"
+            TPL_DIR="$HOME/Library/Application Support/Godot/export_templates/${{ steps.ver.outputs.template_dir }}"
+            mkdir -p "$TPL_DIR"
 
-          curl -fL "https://github.com/godotengine/godot/releases/download/${VER}/Godot_v${VER}_macos.universal.zip" -o godot.zip
-          unzip -q godot.zip -d /tmp/godot_app
+            curl -fL "https://github.com/godotengine/godot/releases/download/${VER}/Godot_v${VER}_macos.universal.zip" -o godot.zip
+            unzip -q godot.zip -d /tmp/godot_app
+
+            curl -fL "https://github.com/godotengine/godot/releases/download/${VER}/Godot_v${VER}_export_templates.tpz" -o templates.tpz
+            unzip -q templates.tpz -d /tmp/templates
+            mv /tmp/templates/templates/ios.zip /tmp/templates/templates/version.txt "$TPL_DIR/"
+            rm -rf godot.zip templates.tpz /tmp/templates
+          else
+            echo "Using cached Godot & iOS export templates"
+          fi
           echo "GODOT_BIN=/tmp/godot_app/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
-
-          curl -fL "https://github.com/godotengine/godot/releases/download/${VER}/Godot_v${VER}_export_templates.tpz" -o templates.tpz
-          unzip -q templates.tpz -d /tmp/templates
-          mv /tmp/templates/templates/* "$TPL_DIR/"
 
       - name: Cache PocketPartyBLE iOS binary
         id: cache-ble
