@@ -28,6 +28,7 @@ SensorGestureController="*res://autoload/SensorGestureController.gd"
 
 window/size/viewport_width=420
 window/size/viewport_height=760
+window/handheld/orientation=1
 
 [rendering]
 
