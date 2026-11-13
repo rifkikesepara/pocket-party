@@ -44,7 +44,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: addons/ble_ios/bin
-          key: ios-ble-godot45-${{ hashFiles('addons/ble_ios/src/**', 'addons/ble_ios/SConstruct') }}
+          key: ios-ble-v2-godot45-${{ hashFiles('addons/ble_ios/src/**', 'addons/ble_ios/SConstruct') }}
 
       - name: Build PocketPartyBLE iOS GDExtension
         run: |
@@ -55,6 +55,10 @@ jobs:
             git clone --depth 1 --branch 4.5 https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp
             mkdir -p addons/ble_ios/bin
             /tmp/scons_venv/bin/scons -C addons/ble_ios platform=ios target=template_release arch=arm64 -j$(sysctl -n hw.ncpu)
+            libtool -static -o addons/ble_ios/bin/libPocketPartyBLE_merged.a \
+              addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a \
+              addons/ble_ios/godot-cpp/bin/libgodot-cpp.ios.template_release.arm64.a
+            mv addons/ble_ios/bin/libPocketPartyBLE_merged.a addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a
           else
             echo "Using cached libPocketPartyBLE.ios.template_release.arm64.a"
           fi
@@ -85,8 +89,9 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            OTHER_LDFLAGS='$(inherited) -framework CoreBluetooth' \
+            OTHER_LDFLAGS="\$(inherited) -framework CoreBluetooth -Wl,-force_load,${GITHUB_WORKSPACE}/addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a" \
             build
+          nm -gU build/derived/Build/Products/Release-iphoneos/PocketParty.app/PocketParty | grep pocket_party_ble_library_init
 
       - name: Package Unsigned .ipa
         run: |
