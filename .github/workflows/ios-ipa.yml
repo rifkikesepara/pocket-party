@@ -39,14 +39,25 @@ jobs:
           unzip -q templates.tpz -d /tmp/templates
           mv /tmp/templates/templates/* "$TPL_DIR/"
 
+      - name: Cache PocketPartyBLE iOS binary
+        id: cache-ble
+        uses: actions/cache@v4
+        with:
+          path: addons/ble_ios/bin
+          key: ios-ble-godot45-${{ hashFiles('addons/ble_ios/src/**', 'addons/ble_ios/SConstruct') }}
+
       - name: Build PocketPartyBLE iOS GDExtension
         run: |
           mv addons/ble_ios/PocketPartyBLE.gdextension.ios addons/ble_ios/PocketPartyBLE.gdextension
-          python3 -m venv /tmp/scons_venv
-          /tmp/scons_venv/bin/pip install --quiet scons
-          git clone --depth 1 --branch 4.5 https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp
-          mkdir -p addons/ble_ios/bin
-          /tmp/scons_venv/bin/scons -C addons/ble_ios platform=ios target=template_release arch=arm64 -j$(sysctl -n hw.ncpu)
+          if [ "${{ steps.cache-ble.outputs.cache-hit }}" != "true" ]; then
+            python3 -m venv /tmp/scons_venv
+            /tmp/scons_venv/bin/pip install --quiet scons
+            git clone --depth 1 --branch 4.5 https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp
+            mkdir -p addons/ble_ios/bin
+            /tmp/scons_venv/bin/scons -C addons/ble_ios platform=ios target=template_release arch=arm64 -j$(sysctl -n hw.ncpu)
+          else
+            echo "Using cached libPocketPartyBLE.ios.template_release.arm64.a"
+          fi
 
       - name: Export Xcode Project
         run: |
