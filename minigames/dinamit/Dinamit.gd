@@ -80,6 +80,7 @@ func _on_start_button_pressed() -> void:
 
 	var payload: PackedByteArray = PackedByteArray([ACTION_START, initial_holder, fuse_tenths])
 	send_game_action(TARGET_BROADCAST, payload)
+	_notify_dynamite_received()
 	_refresh_ui()
 
 func _on_round_started() -> void:
@@ -118,6 +119,7 @@ func _on_pre_round_packet(_sender_id: int, _target_id: int, p_game_id: int, _hea
 		holder_id = payload[1]
 		fuse_total = float(payload[2]) / 10.0
 		fuse_remaining = fuse_total
+		_notify_dynamite_received()
 		_refresh_ui()
 
 func _on_action_received(_sender_id: int, target_id: int, _heading: int, payload: PackedByteArray) -> void:
@@ -128,11 +130,18 @@ func _on_action_received(_sender_id: int, target_id: int, _heading: int, payload
 	if action == ACTION_PASS and payload.size() >= 2:
 		holder_id = target_id
 		fuse_remaining = float(payload[1]) / 10.0
+		_notify_dynamite_received()
 		_refresh_ui()
 	elif action == ACTION_EXPLODE and payload.size() >= 2:
 		_handle_explosion(payload[1])
 
+func _notify_dynamite_received() -> void:
+	if holder_id == PartyNetworkBridge.local_player_id:
+		Input.vibrate_handheld(120, 0.5)
+
 func _handle_explosion(loser_id: int) -> void:
+	if loser_id == PartyNetworkBridge.local_player_id:
+		Input.vibrate_handheld(600, 1.0)
 	var winner_id: int = (loser_id + 1) % 2
 	status_label.text = "BOOM! Oyuncu %d patladı!" % loser_id
 	end_round(winner_id)
