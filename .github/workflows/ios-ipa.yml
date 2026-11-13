@@ -55,12 +55,13 @@ jobs:
 
       - name: Add Bluetooth Privacy Descriptions to Info.plist
         run: |
-          PLIST=$(find build/ios -maxdepth 2 -name "*-Info.plist" | head -n 1)
-          echo "Patching plist: $PLIST"
-          /usr/libexec/PlistBuddy -c "Delete :NSBluetoothAlwaysUsageDescription" "$PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSBluetoothAlwaysUsageDescription string 'Pocket Party yakındaki oyuncularla Bluetooth üzerinden bağlanmak için izin gerektirir.'" "$PLIST"
-          /usr/libexec/PlistBuddy -c "Delete :NSBluetoothPeripheralUsageDescription" "$PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSBluetoothPeripheralUsageDescription string 'Pocket Party masa oyununa Bluetooth ile katılmak için izin gerektirir.'" "$PLIST"
+          for PLIST in $(find build/ios -name "*Info.plist"); do
+            echo "Patching plist: $PLIST"
+            /usr/libexec/PlistBuddy -c "Delete :NSBluetoothAlwaysUsageDescription" "$PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :NSBluetoothAlwaysUsageDescription string 'Pocket Party uses Bluetooth to connect with nearby players.'" "$PLIST"
+            /usr/libexec/PlistBuddy -c "Delete :NSBluetoothPeripheralUsageDescription" "$PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :NSBluetoothPeripheralUsageDescription string 'Pocket Party uses Bluetooth to join nearby game tables.'" "$PLIST"
+          done
 
       - name: Build Unsigned .app with xcodebuild
         run: |
@@ -80,6 +81,12 @@ jobs:
         run: |
           mkdir -p build/ipa/Payload
           cp -R build/derived/Build/Products/Release-iphoneos/PocketParty.app build/ipa/Payload/
+          APP_PLIST="build/ipa/Payload/PocketParty.app/Info.plist"
+          /usr/libexec/PlistBuddy -c "Delete :NSBluetoothAlwaysUsageDescription" "$APP_PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSBluetoothAlwaysUsageDescription string 'Pocket Party uses Bluetooth to connect with nearby players.'" "$APP_PLIST"
+          /usr/libexec/PlistBuddy -c "Delete :NSBluetoothPeripheralUsageDescription" "$APP_PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSBluetoothPeripheralUsageDescription string 'Pocket Party uses Bluetooth to join nearby game tables.'" "$APP_PLIST"
+          /usr/libexec/PlistBuddy -c "Print :NSBluetoothAlwaysUsageDescription" "$APP_PLIST"
           cd build/ipa
           zip -qry ../../PocketParty-unsigned.ipa Payload
 

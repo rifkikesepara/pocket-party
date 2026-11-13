@@ -79,7 +79,7 @@ func _init_native_ble() -> void:
 			connected_peers[id] = { "name": p_name, "rssi": rssi }
 			peer_discovered.emit(id, p_name, rssi)
 		)
-		switch_to_ble()
+		call_deferred("switch_to_ble")
 	else:
 		push_warning("[PartyNetworkBridge] Native BLE eklentisi bulunamadı, LAN UDP test moduna geçiliyor.")
 		_init_lan_network()
