@@ -1,0 +1,18 @@
+[configuration]
+
+entry_symbol = "pocket_party_ble_library_init"
+compatibility_minimum = "4.3"
+
+[libraries]
+
+ios.release.arm64 = "res://addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a"
+ios.debug.arm64 = "res://addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a"
+
+[dependencies]
+
+ios.release = {
+	"CoreBluetooth.framework": ""
+}
+ios.debug = {
+	"CoreBluetooth.framework": ""
+}

@@ -4,6 +4,7 @@ signal peer_discovered(peer_id: int, peer_name: String, rssi: int)
 signal connected_to_table(local_id: int, is_host: bool)
 signal packet_received(sender_id: int, target_id: int, game_id: int, heading: int, seed_val: int, payload: PackedByteArray)
 signal lan_peer_connected(peer_ip: String)
+signal transport_changed(mode_name: String)
 
 const PACKET_SIZE: int = 16
 const MOCK_BASE_PORT: int = 42420
@@ -20,6 +21,7 @@ var local_player_id: int = 0
 var is_host: bool = false
 var is_mock_mode: bool = false
 var is_lan_mode: bool = false
+var is_ble_mode: bool = false
 var connected_peers: Dictionary = {} # { player_id: { "name": String, "heading": float } }
 
 var _mock_udp: PacketPeerUDP = PacketPeerUDP.new()
@@ -45,11 +47,12 @@ func get_local_lan_ip() -> String:
 			return addr
 	return "127.0.0.1"
 
-func connect_lan_peer(peer_ip: String) -> void:
+func connect_lan_peer(peer_ip: String, peer_port: int = LAN_PORT) -> void:
 	var clean_ip: String = peer_ip.strip_edges()
 	if clean_ip.is_empty():
 		return
-	_lan_peers[clean_ip] = true
+	var key: String = "%s:%d" % [clean_ip, peer_port]
+	_lan_peers[key] = { "ip": clean_ip, "port": peer_port }
 	send_packet(PacketType.CALIBRATION, 0xFF, 0, 0, 0, PackedByteArray())
 
 func _parse_cli_args() -> void:
@@ -73,11 +76,41 @@ func _init_native_ble() -> void:
 		_ble_plugin = Engine.get_singleton("PocketPartyBLE")
 		_ble_plugin.connect("on_ble_packet", _on_raw_packet_arrived)
 		_ble_plugin.connect("on_peer_found", func(id: int, p_name: String, rssi: int) -> void:
+			connected_peers[id] = { "name": p_name, "rssi": rssi }
 			peer_discovered.emit(id, p_name, rssi)
 		)
+		switch_to_ble()
 	else:
 		push_warning("[PartyNetworkBridge] Native BLE eklentisi bulunamadı, LAN UDP test moduna geçiliyor.")
 		_init_lan_network()
+
+func switch_to_ble() -> bool:
+	if _ble_plugin == null:
+		if Engine.has_singleton("PocketPartyBLE"):
+			_ble_plugin = Engine.get_singleton("PocketPartyBLE")
+		else:
+			push_warning("[PartyNetworkBridge] Bu platformda native BLE eklentisi yok.")
+			return false
+	if is_lan_mode:
+		_lan_udp.close()
+		is_lan_mode = false
+	is_ble_mode = true
+	if _ble_plugin.has_method("start_ble"):
+		_ble_plugin.call("start_ble")
+	if local_player_id == 0 and OS.get_name() in ["iOS", "Android"]:
+		set_local_player_id(1)
+	transport_changed.emit("BLE")
+	print("[PartyNetworkBridge] Native BLE aktif. Oyuncu ID: %d" % local_player_id)
+	return true
+
+func switch_to_lan() -> void:
+	if is_ble_mode and _ble_plugin != null and _ble_plugin.has_method("stop_ble"):
+		_ble_plugin.call("stop_ble")
+	is_ble_mode = false
+	if not is_lan_mode:
+		_init_lan_network()
+	else:
+		transport_changed.emit("LAN_UDP")
 
 func _init_lan_network() -> void:
 	var default_id: int = 1 if OS.get_name() in ["iOS", "Android"] else 0
@@ -86,6 +119,7 @@ func _init_lan_network() -> void:
 	if err == OK:
 		_lan_udp.set_broadcast_enabled(true)
 		is_lan_mode = true
+		transport_changed.emit("LAN_UDP")
 		print("[PartyNetworkBridge] LAN UDP aktif. Oyuncu ID: %d, Port: %d" % [local_player_id, LAN_PORT])
 	else:
 		push_warning("[PartyNetworkBridge] LAN UDP portu bağlanamadı: %d" % LAN_PORT)
@@ -98,8 +132,10 @@ func _process(_delta: float) -> void:
 		while _lan_udp.get_available_packet_count() > 0:
 			var raw: PackedByteArray = _lan_udp.get_packet()
 			var peer_ip: String = _lan_udp.get_packet_ip()
-			if not peer_ip.is_empty() and not _lan_peers.has(peer_ip):
-				_lan_peers[peer_ip] = true
+			var peer_port: int = _lan_udp.get_packet_port()
+			var key: String = "%s:%d" % [peer_ip, peer_port]
+			if not peer_ip.is_empty() and not _lan_peers.has(key):
+				_lan_peers[key] = { "ip": peer_ip, "port": peer_port }
 				lan_peer_connected.emit(peer_ip)
 				send_packet(PacketType.CALIBRATION, 0xFF, 0, 0, 0, PackedByteArray())
 			_on_raw_packet_arrived(raw)
@@ -136,8 +172,8 @@ func _dispatch_raw_packet(packet: PackedByteArray) -> void:
 		_ble_plugin.send_ble_packet(packet)
 
 func _broadcast_lan_packet(packet: PackedByteArray) -> void:
-	for peer_ip: String in _lan_peers.keys():
-		_lan_udp.set_dest_address(peer_ip, LAN_PORT)
+	for peer_info: Dictionary in _lan_peers.values():
+		_lan_udp.set_dest_address(peer_info["ip"], peer_info["port"])
 		_lan_udp.put_packet(packet)
 	var sent_targets: Dictionary = {}
 	for addr: String in IP.get_local_addresses():

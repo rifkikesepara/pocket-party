@@ -39,10 +39,28 @@ jobs:
           unzip -q templates.tpz -d /tmp/templates
           mv /tmp/templates/templates/* "$TPL_DIR/"
 
+      - name: Build PocketPartyBLE iOS GDExtension
+        run: |
+          mv addons/ble_ios/PocketPartyBLE.gdextension.ios addons/ble_ios/PocketPartyBLE.gdextension
+          pip3 install --quiet scons
+          git clone --depth 1 --branch 4.6-stable https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp \
+            || git clone --depth 1 --branch 4.5-stable https://github.com/godotengine/godot-cpp.git addons/ble_ios/godot-cpp
+          mkdir -p addons/ble_ios/bin
+          scons -C addons/ble_ios platform=ios target=template_release arch=arm64 -j$(sysctl -n hw.ncpu)
+
       - name: Export Xcode Project
         run: |
           mkdir -p build/ios
           "$GODOT_BIN" --headless --path . --export-release "iOS" build/ios/PocketParty.xcodeproj
+
+      - name: Add Bluetooth Privacy Descriptions to Info.plist
+        run: |
+          PLIST=$(find build/ios -maxdepth 2 -name "*-Info.plist" | head -n 1)
+          echo "Patching plist: $PLIST"
+          /usr/libexec/PlistBuddy -c "Delete :NSBluetoothAlwaysUsageDescription" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSBluetoothAlwaysUsageDescription string 'Pocket Party yakındaki oyuncularla Bluetooth üzerinden bağlanmak için izin gerektirir.'" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Delete :NSBluetoothPeripheralUsageDescription" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSBluetoothPeripheralUsageDescription string 'Pocket Party masa oyununa Bluetooth ile katılmak için izin gerektirir.'" "$PLIST"
 
       - name: Build Unsigned .app with xcodebuild
         run: |
@@ -55,6 +73,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
+            OTHER_LDFLAGS='$(inherited) -framework CoreBluetooth' \
             build
 
       - name: Package Unsigned .ipa

@@ -9,7 +9,12 @@ const TARGET_BROADCAST: int = 0xFF
 const MIN_FUSE_SEC: float = 8.0
 const MAX_FUSE_SEC: float = 16.0
 
+@onready var main_margin: MarginContainer = %MarginContainer
 @onready var player_label: Label = %PlayerLabel
+@onready var role_button: Button = %RoleButton
+@onready var transport_bar: HBoxContainer = %TransportBar
+@onready var ble_button: Button = %BleButton
+@onready var lan_button: Button = %LanButton
 @onready var ip_label: Label = %IpLabel
 @onready var lan_bar: HBoxContainer = %LanBar
 @onready var peer_ip_input: LineEdit = %PeerIpInput
@@ -32,12 +37,20 @@ func _ready() -> void:
 	super._ready()
 	PartyNetworkBridge.packet_received.connect(_on_pre_round_packet)
 	PartyNetworkBridge.lan_peer_connected.connect(_on_lan_peer_connected)
+	PartyNetworkBridge.peer_discovered.connect(_on_ble_peer_discovered)
+	PartyNetworkBridge.transport_changed.connect(_on_transport_changed)
+	role_button.pressed.connect(_on_role_button_pressed)
+	ble_button.pressed.connect(_on_ble_button_pressed)
+	lan_button.pressed.connect(_on_lan_button_pressed)
 	start_button.pressed.connect(_on_start_button_pressed)
 	connect_button.pressed.connect(_on_connect_button_pressed)
+	get_viewport().size_changed.connect(_apply_safe_area)
 
-	lan_bar.visible = PartyNetworkBridge.is_lan_mode
-	ip_label.visible = PartyNetworkBridge.is_lan_mode
+	role_button.visible = not PartyNetworkBridge.is_mock_mode
+	transport_bar.visible = not PartyNetworkBridge.is_mock_mode
 	ip_label.text = "IP: %s (Port 42425)" % PartyNetworkBridge.get_local_lan_ip()
+	_refresh_transport_ui()
+	_apply_safe_area()
 
 	selected_target_id = SensorGestureController.current_target_id
 	_refresh_ui()
@@ -63,6 +76,56 @@ func _on_connect_button_pressed() -> void:
 
 func _on_lan_peer_connected(peer_ip: String) -> void:
 	status_label.text = "Bağlandı: %s" % peer_ip
+
+func _on_ble_peer_discovered(_id: int, peer_name: String, rssi: int) -> void:
+	status_label.text = "BLE bulundu: %s (%d dBm)" % [peer_name, rssi]
+
+func _on_role_button_pressed() -> void:
+	var next_id: int = (PartyNetworkBridge.local_player_id + 1) % 2
+	PartyNetworkBridge.set_local_player_id(next_id)
+	SensorGestureController.current_target_id = (next_id + 1) % 2
+	selected_target_id = SensorGestureController.current_target_id
+	_refresh_ui()
+
+func _on_ble_button_pressed() -> void:
+	if PartyNetworkBridge.switch_to_ble():
+		status_label.text = "Mod: Bluetooth (BLE)"
+	else:
+		status_label.text = "Native BLE yok (PC'de pc_ble_bridge.py + LAN UDP kullan)"
+	_refresh_transport_ui()
+
+func _on_lan_button_pressed() -> void:
+	PartyNetworkBridge.switch_to_lan()
+	status_label.text = "Mod: Wi-Fi (LAN UDP)"
+	_refresh_transport_ui()
+
+func _on_transport_changed(_mode_name: String) -> void:
+	_refresh_transport_ui()
+
+func _refresh_transport_ui() -> void:
+	lan_bar.visible = PartyNetworkBridge.is_lan_mode
+	ip_label.visible = PartyNetworkBridge.is_lan_mode
+	ble_button.disabled = PartyNetworkBridge.is_ble_mode
+	lan_button.disabled = PartyNetworkBridge.is_lan_mode
+
+func _apply_safe_area() -> void:
+	var safe_rect: Rect2i = DisplayServer.get_display_safe_area()
+	var win_size: Vector2i = DisplayServer.window_get_size()
+	if win_size.x <= 0 or win_size.y <= 0:
+		return
+	var vp_size: Vector2 = get_viewport_rect().size
+	var scale_x: float = vp_size.x / float(win_size.x)
+	var scale_y: float = vp_size.y / float(win_size.y)
+
+	var left_px: int = safe_rect.position.x
+	var top_px: int = safe_rect.position.y
+	var right_px: int = win_size.x - (safe_rect.position.x + safe_rect.size.x)
+	var bottom_px: int = win_size.y - (safe_rect.position.y + safe_rect.size.y)
+
+	main_margin.add_theme_constant_override("margin_left", maxi(20, int(roundf(float(left_px) * scale_x)) + 16))
+	main_margin.add_theme_constant_override("margin_top", maxi(24, int(roundf(float(top_px) * scale_y)) + 16))
+	main_margin.add_theme_constant_override("margin_right", maxi(20, int(roundf(float(right_px) * scale_x)) + 16))
+	main_margin.add_theme_constant_override("margin_bottom", maxi(24, int(roundf(float(bottom_px) * scale_y)) + 16))
 
 func _on_start_button_pressed() -> void:
 	if is_round_active:

@@ -1,3 +1,7 @@
 .godot/
 build/
 *.ipa
+addons/ble_ios/godot-cpp/
+addons/ble_ios/bin/
+*.o
+*.os
