@@ -89,7 +89,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            OTHER_LDFLAGS="\$(inherited) -framework CoreBluetooth -Wl,-force_load,${GITHUB_WORKSPACE}/addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a" \
+            OTHER_LDFLAGS="\$(inherited) -framework CoreBluetooth -Wl,-force_load,${GITHUB_WORKSPACE}/addons/ble_ios/bin/libPocketPartyBLE.ios.template_release.arm64.a -Wl,-exported_symbol,_pocket_party_ble_library_init" \
             build
           nm -gU build/derived/Build/Products/Release-iphoneos/PocketParty.app/PocketParty | grep pocket_party_ble_library_init
 
