@@ -1,6 +1,8 @@
 class_name DinamitMinigame
 extends MiniGameBase
 
+signal leave_lobby_requested
+
 const ACTION_START: int = 0x01
 const ACTION_PASS: int = 0x02
 const ACTION_EXPLODE: int = 0x03
@@ -45,10 +47,15 @@ const NEUTRAL: Color = Color("#d4b9f3")
 @onready var start_button: Button = %StartButton
 @onready var pass_button: Button = %PassButton
 @onready var flash: ColorRect = %Flash
+@onready var menu_button: Button = %MenuButton
 
 var holder_id: int = 0
 var fuse_total: float = 0.0
 var fuse_remaining: float = 0.0
+var lobby_tag: int = 0
+var lobby_local_name: String = ""
+var lobby_peer_name: String = ""
+var show_menu_button: bool = false
 
 var _countdown: float = 0.0
 var _countdown_digit: int = 0
@@ -81,7 +88,13 @@ func _ready() -> void:
 	lan_button.pressed.connect(PartyNetworkBridge.switch_to_lan)
 	connect_button.pressed.connect(_on_connect_button_pressed)
 	peer_ip_input.text_submitted.connect(_on_peer_ip_submitted)
-	settings_button.pressed.connect(_open_settings)
+	if lobby_tag == 0:
+		settings_button.pressed.connect(_open_settings)
+	else:
+		settings_button.text = "Lobiden çık"
+		settings_button.pressed.connect(func() -> void: leave_lobby_requested.emit())
+	menu_button.visible = show_menu_button
+	menu_button.pressed.connect(func() -> void: leave_lobby_requested.emit())
 	close_settings.pressed.connect(_close_settings)
 	reduce_motion.toggled.connect(_on_reduce_motion_toggled)
 	start_button.pressed.connect(_on_start_button_pressed)
@@ -119,6 +132,8 @@ func _on_start_button_pressed() -> void:
 	if is_round_active or not _can_start() or settings.visible:
 		return
 	var seed_val: int = randi()
+	if lobby_tag != 0:
+		seed_val = (seed_val & 0xFFFF0000) | lobby_tag
 	var round_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	round_rng.seed = seed_val
 	var initial_holder: int = round_rng.randi_range(0, 1)
@@ -173,6 +188,8 @@ func _turn_payload(action: int, value: int) -> PackedByteArray:
 
 func _on_network_packet(sender_id: int, target_id: int, p_game_id: int, heading: int, seed_val: int, payload: PackedByteArray) -> void:
 	if p_game_id != game_id or sender_id != _opponent_id() or payload.is_empty():
+		return
+	if lobby_tag != 0 and (seed_val & 0xFFFF) != lobby_tag:
 		return
 	if payload[0] == ACTION_START:
 		if is_round_active or sender_id != 0 or target_id != TARGET_BROADCAST:
@@ -234,13 +251,15 @@ func _refresh_ui() -> void:
 		start_button.hide()
 		return
 
-	local_player.text = "Oyuncu %d" % local_id
-	peer_player.text = "Oyuncu %d" % peer_id
+	local_player.text = lobby_local_name if lobby_tag != 0 else "Oyuncu %d" % local_id
+	peer_player.text = lobby_peer_name if lobby_tag != 0 else "Oyuncu %d" % peer_id
+	local_player.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	peer_player.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	local_score.text = str(_scores[local_id])
 	peer_score.text = str(_scores[peer_id])
 	role_button.text = "Oyuncu %d rolüne geç" % peer_id
 	round_label.text = "TUR %02d" % maxi(1, _round_number)
-	settings_button.disabled = is_round_active
+	settings_button.disabled = lobby_tag == 0 and is_round_active
 	start_button.visible = not is_round_active and _can_start()
 	start_button.text = "Yeniden oyna  →" if _winner_id >= 0 else "Turu başlat  →"
 	pass_button.visible = _can_pass()
@@ -257,7 +276,7 @@ func _refresh_ui() -> void:
 		holder_label.text = "Turu kazandın!" if won else "Tur rakibin!"
 		hint_label.text = "Dinamit rakibinde patladı." if won else "Dinamit sende patladı."
 		if not _can_start():
-			hint_label.text += " Yeni turu Oyuncu 0 başlatır."
+			hint_label.text += " Yeni turu ev sahibi başlatır."
 	elif is_round_active and _countdown > 0.0:
 		stage_status.text = "●  BAŞLIYOR"
 		holder_label.text = "Hazır ol!"
@@ -273,7 +292,7 @@ func _refresh_ui() -> void:
 	else:
 		stage_status.text = "●  HAZIR" if _can_start() else "●  BEKLİYOR"
 		holder_label.text = "Masayı hazırla" if _can_start() else "Hazır bekle"
-		hint_label.text = "Fitil bitmeden dinamiti rakibine gönder." if _can_start() else "Oyuncu 0 turu başlattığında geri sayım başlar."
+		hint_label.text = "Fitil bitmeden dinamiti rakibine gönder." if _can_start() else "Ev sahibi turu başlattığında geri sayım başlar."
 
 	artwork.accent = accent
 	stage_status.add_theme_color_override("font_color", accent)

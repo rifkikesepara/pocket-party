@@ -1,0 +1,728 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://menu/PartyMenu.gd" id="1_menu"]
+[ext_resource type="Script" path="res://menu/PartyLobby.gd" id="2_lobby"]
+[ext_resource type="Script" path="res://menu/PartyAvatar.gd" id="3_avatar"]
+[ext_resource type="Script" path="res://menu/PartyMenuArt.gd" id="4_art"]
+
+[sub_resource type="FontVariation" id="Heavy"]
+variation_embolden = 1.05
+
+[sub_resource type="StyleBoxFlat" id="Card"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+bg_color = Color(0.14118, 0.10980, 0.17647, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.34118, 0.27059, 0.37647, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="Hero"]
+content_margin_left = 14.0
+content_margin_top = 0.0
+content_margin_right = 14.0
+content_margin_bottom = 0.0
+bg_color = Color(0.12941, 0.09412, 0.16471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.31765, 0.23529, 0.34902, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="StyleBoxFlat" id="Button"]
+content_margin_left = 13.0
+content_margin_top = 8.0
+content_margin_right = 13.0
+content_margin_bottom = 8.0
+bg_color = Color(0.18824, 0.14118, 0.23137, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.34118, 0.27059, 0.37647, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="Hover"]
+content_margin_left = 13.0
+content_margin_top = 8.0
+content_margin_right = 13.0
+content_margin_bottom = 8.0
+bg_color = Color(0.26667, 0.20392, 0.31373, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85490, 0.73333, 0.97255, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="Pressed"]
+content_margin_left = 13.0
+content_margin_top = 8.0
+content_margin_right = 13.0
+content_margin_bottom = 8.0
+bg_color = Color(0.31765, 0.25098, 0.37255, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85490, 0.73333, 0.97255, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="Disabled"]
+content_margin_left = 13.0
+content_margin_top = 8.0
+content_margin_right = 13.0
+content_margin_bottom = 8.0
+bg_color = Color(0.14902, 0.11765, 0.18824, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.27843, 0.22745, 0.32157, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="Primary"]
+content_margin_left = 13.0
+content_margin_top = 8.0
+content_margin_right = 13.0
+content_margin_bottom = 8.0
+bg_color = Color(1.00000, 0.78824, 0.41176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1.00000, 0.78824, 0.41176, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="PrimaryHover"]
+content_margin_left = 13.0
+content_margin_top = 8.0
+content_margin_right = 13.0
+content_margin_bottom = 8.0
+bg_color = Color(1.00000, 0.85490, 0.58039, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1.00000, 0.85490, 0.58039, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="PrimaryPressed"]
+content_margin_left = 13.0
+content_margin_top = 8.0
+content_margin_right = 13.0
+content_margin_bottom = 8.0
+bg_color = Color(0.94118, 0.70196, 0.34902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.94118, 0.70196, 0.34902, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="Input"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0.10588, 0.07843, 0.13725, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45098, 0.36863, 0.49412, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="StyleBoxFlat" id="Focus"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85490, 0.73333, 0.97255, 1)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+
+[sub_resource type="Theme" id="Theme_menu"]
+default_font_size = 16
+Button/colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+Button/colors/font_hover_color = Color(1.00000, 0.94118, 0.90980, 1)
+Button/colors/font_pressed_color = Color(1.00000, 0.94118, 0.90980, 1)
+Button/colors/font_focus_color = Color(1.00000, 0.94118, 0.90980, 1)
+Button/colors/font_disabled_color = Color(0.79608, 0.72157, 0.81176, 1)
+Button/styles/normal = SubResource("Button")
+Button/styles/hover = SubResource("Hover")
+Button/styles/pressed = SubResource("Pressed")
+Button/styles/disabled = SubResource("Disabled")
+Button/styles/focus = SubResource("Focus")
+PrimaryButton/base_type = &"Button"
+PrimaryButton/colors/font_color = Color(0.15686, 0.10196, 0.19608, 1)
+PrimaryButton/colors/font_hover_color = Color(0.15686, 0.10196, 0.19608, 1)
+PrimaryButton/colors/font_pressed_color = Color(0.15686, 0.10196, 0.19608, 1)
+PrimaryButton/colors/font_focus_color = Color(0.15686, 0.10196, 0.19608, 1)
+PrimaryButton/colors/font_hover_pressed_color = Color(0.15686, 0.10196, 0.19608, 1)
+PrimaryButton/fonts/font = SubResource("Heavy")
+PrimaryButton/font_sizes/font_size = 19
+PrimaryButton/styles/normal = SubResource("Primary")
+PrimaryButton/styles/hover = SubResource("PrimaryHover")
+PrimaryButton/styles/pressed = SubResource("PrimaryPressed")
+LineEdit/colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+LineEdit/colors/font_placeholder_color = Color(0.79608, 0.72157, 0.81176, 1)
+LineEdit/styles/normal = SubResource("Input")
+LineEdit/styles/focus = SubResource("Focus")
+
+[node name="PartyMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = SubResource("Theme_menu")
+script = ExtResource("1_menu")
+
+[node name="Lobby" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_lobby")
+
+[node name="Menu" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+unique_name_in_owner = true
+
+[node name="Backdrop" type="ColorRect" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.09020, 0.07059, 0.12157, 1)
+
+[node name="SafeMargin" type="MarginContainer" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+unique_name_in_owner = true
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Layout" type="VBoxContainer" parent="Menu/SafeMargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="Menu/SafeMargin/Layout"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Brand" type="Label" parent="Menu/SafeMargin/Layout/Header"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.85490, 0.73333, 0.97255, 1)
+text = "POCKET PARTY"
+size_flags_horizontal = 3
+
+[node name="Back" type="Button" parent="Menu/SafeMargin/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "‹  Geri"
+visible = false
+
+[node name="Scroll" type="ScrollContainer" parent="Menu/SafeMargin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Pages" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+size_flags_horizontal = 3
+
+[node name="Home" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+unique_name_in_owner = true
+
+[node name="Title" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Headline" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Title"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 49
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = "Parti başlasın."
+
+[node name="Lead" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Title"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
+text = "Arkadaşlarınla aynı masada oyna."
+
+[node name="Hero" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Hero")
+
+[node name="PartyArt" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Hero"]
+layout_mode = 2
+mouse_filter = 2
+custom_minimum_size = Vector2(0, 173)
+clip_contents = true
+script = ExtResource("4_art")
+
+[node name="ProfileCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="ProfileRow" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="HomeAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow"]
+layout_mode = 2
+mouse_filter = 2
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+script = ExtResource("3_avatar")
+avatar = 0
+
+[node name="Text" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="ProfileLabel" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow/Text"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.85490, 0.73333, 0.97255, 1)
+text = "OYUNCU PROFİLİ"
+
+[node name="HomeName" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow/Text"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = "Profil oluştur"
+unique_name_in_owner = true
+text_overrun_behavior = 3
+
+[node name="EditProfile" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Düzenle"
+
+[node name="Actions" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Host" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+mouse_default_cursor_shape = 2
+text = "Lobi kur  →"
+theme_type_variation = &"PrimaryButton"
+
+[node name="Search" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+mouse_default_cursor_shape = 2
+text = "Yakındaki lobiler  ›"
+
+[node name="Transport" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
+text = "Yakındaki oyuncularla Bluetooth üzerinden bağlan."
+autowrap_mode = 3
+
+[node name="HomeNotice" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
+text = ""
+unique_name_in_owner = true
+visible = false
+autowrap_mode = 3
+
+[node name="ConnectionTest" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Bağlantı testi"
+
+[node name="Profile" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+unique_name_in_owner = true
+visible = false
+
+[node name="Title" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = "Profilini oluştur"
+
+[node name="Preview" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Hero")
+
+[node name="EditorAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Preview"]
+layout_mode = 2
+mouse_filter = 2
+unique_name_in_owner = true
+custom_minimum_size = Vector2(156, 156)
+script = ExtResource("3_avatar")
+avatar = 0
+size_flags_horizontal = 4
+
+[node name="Options" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Color" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Renk"
+size_flags_horizontal = 3
+
+[node name="Face" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Yüz"
+size_flags_horizontal = 3
+
+[node name="InputLabel" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = "Takma ad"
+
+[node name="Nickname" type="LineEdit" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+placeholder_text = "Örn. Misket"
+max_length = 24
+
+[node name="EditorNotice" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
+text = ""
+unique_name_in_owner = true
+visible = false
+autowrap_mode = 3
+
+[node name="SaveProfile" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Profili kaydet  →"
+theme_type_variation = &"PrimaryButton"
+
+[node name="Nearby" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+unique_name_in_owner = true
+visible = false
+
+[node name="Title" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = "Yakındaki lobiler"
+
+[node name="SearchCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="SearchContent" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby/SearchCard"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="NearbyStatus" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby/SearchCard/SearchContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
+text = "Yakındaki lobiler aranıyor."
+unique_name_in_owner = true
+autowrap_mode = 3
+
+[node name="RoomList" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby/SearchCard/SearchContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+unique_name_in_owner = true
+
+[node name="Room" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+unique_name_in_owner = true
+visible = false
+
+[node name="Title" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 40
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = "Parti lobisi"
+
+[node name="RoomStatus" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
+text = ""
+unique_name_in_owner = true
+autowrap_mode = 3
+
+[node name="LocalCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Row" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="AvatarSlot" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row"]
+layout_mode = 2
+mouse_filter = 2
+custom_minimum_size = Vector2(60, 60)
+
+[node name="LocalAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row/AvatarSlot"]
+layout_mode = 1
+mouse_filter = 2
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+script = ExtResource("3_avatar")
+avatar = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="LocalRole" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row/Player"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.85490, 0.73333, 0.97255, 1)
+text = ""
+unique_name_in_owner = true
+
+[node name="LocalName" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row/Player"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = ""
+unique_name_in_owner = true
+text_overrun_behavior = 3
+
+[node name="PeerCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Row" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="AvatarSlot" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row"]
+layout_mode = 2
+mouse_filter = 2
+custom_minimum_size = Vector2(60, 60)
+
+[node name="PeerAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row/AvatarSlot"]
+layout_mode = 1
+mouse_filter = 2
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+script = ExtResource("3_avatar")
+avatar = 9
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="PeerRole" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row/Player"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.57647, 0.92941, 0.80000, 1)
+text = ""
+unique_name_in_owner = true
+
+[node name="PeerName" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row/Player"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
+text = ""
+unique_name_in_owner = true
+text_overrun_behavior = 3
+
+[node name="GameCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Hero")
+
+[node name="GameRow" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/GameCard"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+custom_minimum_size = Vector2(0, 66)
+
+[node name="Game" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/GameCard/GameRow"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Heavy")
+theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
+text = "Dinamit"
+size_flags_horizontal = 3
+
+[node name="Capacity" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/GameCard/GameRow"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
+text = "2 oyuncu"
+
+[node name="StartGame" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+mouse_default_cursor_shape = 2
+text = "Dinamit’i aç  →"
+theme_type_variation = &"PrimaryButton"
+
+[node name="LeaveRoom" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Lobiden ayrıl"

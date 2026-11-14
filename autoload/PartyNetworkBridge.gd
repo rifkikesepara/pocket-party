@@ -5,10 +5,12 @@ signal connected_to_table(local_id: int, is_host: bool)
 signal packet_received(sender_id: int, target_id: int, game_id: int, heading: int, seed_val: int, payload: PackedByteArray)
 signal lan_peer_connected(peer_ip: String)
 signal transport_changed(mode_name: String)
+signal lobby_packet_received(sender_id: int, target_id: int, room_id: int, payload: PackedByteArray)
 
 const PACKET_SIZE: int = 16
 const MOCK_BASE_PORT: int = 42420
 const LAN_PORT: int = 42425
+const LOBBY_PAYLOAD_MARKER: int = 0x80
 
 enum PacketType {
 	CALIBRATION = 0x01,
@@ -25,6 +27,7 @@ var is_ble_mode: bool = false
 var connected_peers: Dictionary = {} # { player_id: { "name": String, "heading": float } }
 
 var _mock_udp: PacketPeerUDP = PacketPeerUDP.new()
+var _mock_port_id: int = 0
 var _lan_udp: PacketPeerUDP = PacketPeerUDP.new()
 var _lan_peers: Dictionary = {}
 var _ble_plugin: Object = null
@@ -63,7 +66,8 @@ func _parse_cli_args() -> void:
 			is_host = (local_player_id == 0)
 
 func _init_mock_network() -> void:
-	var port: int = MOCK_BASE_PORT + local_player_id
+	_mock_port_id = local_player_id
+	var port: int = MOCK_BASE_PORT + _mock_port_id
 	var err: Error = _mock_udp.bind(port, "127.0.0.1")
 	if err == OK:
 		print("[PartyNetworkBridge] Mock UDP aktif. Oyuncu ID: %d, Port: %d" % [local_player_id, port])
@@ -94,10 +98,11 @@ func switch_to_ble() -> bool:
 	if is_lan_mode:
 		_lan_udp.close()
 		is_lan_mode = false
+	var was_ble: bool = is_ble_mode
 	is_ble_mode = true
 	if _ble_plugin.has_method("start_ble"):
 		_ble_plugin.call("start_ble")
-	if local_player_id == 0 and OS.get_name() in ["iOS", "Android"]:
+	if not was_ble and local_player_id == 0 and OS.get_name() in ["iOS", "Android"]:
 		set_local_player_id(1)
 	transport_changed.emit("BLE")
 	print("[PartyNetworkBridge] Native BLE aktif. Oyuncu ID: %d" % local_player_id)
@@ -159,11 +164,14 @@ func send_packet(p_type: int, target_id: int, game_id: int, heading: int, seed_v
 	packet.encode_u8(15, _calculate_checksum(packet))
 	_dispatch_raw_packet(packet)
 
+func send_lobby_packet(target_id: int, room_id: int, payload: PackedByteArray) -> void:
+	send_packet(PacketType.CALIBRATION, target_id, 0, 0, room_id, payload)
+
 func _dispatch_raw_packet(packet: PackedByteArray) -> void:
 	if is_mock_mode:
 		# Mock modda 0-3 arası tüm yerel portlara yayın yap
 		for peer_id: int in range(4):
-			if peer_id != local_player_id:
+			if peer_id != _mock_port_id:
 				_mock_udp.set_dest_address("127.0.0.1", MOCK_BASE_PORT + peer_id)
 				_mock_udp.put_packet(packet)
 	elif is_lan_mode:
@@ -203,7 +211,10 @@ func _on_raw_packet_arrived(packet: PackedByteArray) -> void:
 	var heading: int = packet.decode_u16(4)
 	var seed_val: int = packet.decode_u32(6)
 	var payload: PackedByteArray = packet.slice(10, 15)
-	
+	if packet[0] == PacketType.CALIBRATION and game_id == 0 and payload[0] >= LOBBY_PAYLOAD_MARKER:
+		lobby_packet_received.emit(sender_id, target_id, seed_val, payload)
+		return
+
 	packet_received.emit(sender_id, target_id, game_id, heading, seed_val, payload)
 
 func _calculate_checksum(packet: PackedByteArray) -> int:
