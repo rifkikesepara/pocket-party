@@ -6,7 +6,7 @@ signal game_requested
 signal lobby_ended(message: String)
 
 enum State { IDLE, SEARCHING, JOINING, HOST, GUEST, PLAYING }
-enum Message { BEACON = 128, JOIN, ACCEPT, PRESENT, LEAVE, START, READY, OPEN_PROFILE = 144, MEMBER_PROFILE = 160 }
+enum Message { BEACON = 128, JOIN, ACCEPT, PRESENT, LEAVE, START, READY, PHOTO_CHUNK, PHOTO_RECEIVED, OPEN_PROFILE = 144, MEMBER_PROFILE = 160 }
 
 const BROADCAST: int = 255
 const HOST_ID: int = 0
@@ -14,6 +14,9 @@ const GUEST_ID: int = 1
 const TIMEOUT_MS: int = 6500
 const TICK_SEC: float = 0.85
 const FRAGMENT_INTERVAL: float = 0.045
+const PHOTO_CHUNK_COUNT: int = PartyProfile.LOBBY_PHOTO_BYTES / 3
+const PHOTO_INTERVAL: float = 0.03
+const PHOTO_WAIT_MS: int = 22000
 
 class NearbyRoom:
 	var last_seen: int
@@ -39,6 +42,13 @@ var _member_received: int = 0
 var _pending: Array[PackedByteArray] = []
 var _profile_confirmed: bool = false
 var _send_start_next: bool = false
+var _photo_out: PackedByteArray
+var _photo_in: PackedByteArray
+var _photo_chunks: PackedByteArray
+var _photo_chunks_received: int = 0
+var _photo_cursor: int = 0
+var _photo_confirmed: bool = false
+var _photo_wait_until: int = 0
 
 func _ready() -> void:
 	PartyNetworkBridge.lobby_packet_received.connect(_on_packet)
@@ -72,7 +82,7 @@ func join(id: int) -> void:
 	changed.emit()
 
 func start_game() -> void:
-	if state != State.HOST or peer_profile == null or starting:
+	if state != State.HOST or peer_profile == null or starting or photos_syncing():
 		return
 	starting = true
 	_send_start_next = true
@@ -87,6 +97,12 @@ func leave() -> void:
 func game_tag() -> int:
 	return 1 + _member_token % 65535
 
+func photos_syncing() -> bool:
+	return _photo_wait_until != 0 and _photo_exchange_active() and (
+		(peer_profile.shares_lobby_photo and peer_profile.photo == null)
+		or (not _photo_out.is_empty() and not _photo_confirmed)
+	)
+
 func _prepare(profile: PartyProfile, role: int) -> bool:
 	if state != State.IDLE:
 		return false
@@ -95,6 +111,7 @@ func _prepare(profile: PartyProfile, role: int) -> bool:
 	_previous_player_id = PartyNetworkBridge.local_player_id
 	PartyNetworkBridge.set_local_player_id(role)
 	local_profile = profile
+	_photo_out = profile.encode_lobby_photo()
 	return true
 
 func _reset() -> void:
@@ -118,6 +135,12 @@ func _clear_member() -> void:
 	_pending.clear()
 	_profile_confirmed = false
 	_send_start_next = false
+	_photo_in.clear()
+	_photo_chunks.clear()
+	_photo_chunks_received = 0
+	_photo_cursor = 0
+	_photo_confirmed = false
+	_photo_wait_until = 0
 
 func _process(delta: float) -> void:
 	if state == State.IDLE:
@@ -130,6 +153,11 @@ func _process(delta: float) -> void:
 				changed.emit()
 	if _member_token != 0 and now - _last_seen > TIMEOUT_MS:
 		_member_departed("Rakibin bağlantısı kesildi.")
+	if _photo_wait_until != 0 and now >= _photo_wait_until:
+		var was_syncing: bool = photos_syncing()
+		_photo_wait_until = 0
+		if was_syncing:
+			changed.emit()
 	_until_tick -= delta
 	_until_fragment -= delta
 	if _until_tick <= 0.0:
@@ -138,6 +166,13 @@ func _process(delta: float) -> void:
 		# Space profile fragments across frames for BLE write capacity.
 		_until_fragment = FRAGMENT_INTERVAL
 		PartyNetworkBridge.send_lobby_packet(BROADCAST if _host and _member_token == 0 else _peer_id(), room_id if _host and _member_token == 0 else _member_token, _pending.pop_front())
+	elif _until_fragment <= 0.0 and _photo_exchange_active() and not _photo_confirmed and not _photo_out.is_empty():
+		_until_fragment = PHOTO_INTERVAL
+		var offset: int = _photo_cursor * 3
+		_send(_peer_id(), _member_token, Message.PHOTO_CHUNK, PackedByteArray([
+			_photo_cursor, _photo_out[offset], _photo_out[offset + 1], _photo_out[offset + 2],
+		]))
+		_photo_cursor = (_photo_cursor + 1) % PHOTO_CHUNK_COUNT
 
 func _tick() -> void:
 	_until_tick = TICK_SEC
@@ -188,6 +223,7 @@ func _on_packet(sender: int, target: int, id: int, data: PackedByteArray) -> voi
 	if state == State.JOINING and command == Message.ACCEPT and id == room_id and data.decode_u32(1) == _member_token:
 		state = State.GUEST
 		_last_seen = now
+		_photo_wait_until = now + PHOTO_WAIT_MS
 		_tick()
 		changed.emit()
 		return
@@ -215,9 +251,42 @@ func _on_packet(sender: int, target: int, id: int, data: PackedByteArray) -> voi
 				_enter_game()
 			elif state == State.PLAYING:
 				_last_seen = now
+		Message.PHOTO_CHUNK:
+			if target == PartyNetworkBridge.local_player_id and _photo_exchange_active():
+				_read_photo_chunk(data)
+		Message.PHOTO_RECEIVED:
+			if target == PartyNetworkBridge.local_player_id and _photo_exchange_active() and not _photo_confirmed:
+				_photo_confirmed = true
+				changed.emit()
 		_:
 			if state == State.HOST and peer_profile == null:
 				_read_member_profile(command, data)
+
+func _photo_exchange_active() -> bool:
+	return (state == State.HOST or state == State.GUEST) and not starting and peer_profile != null and peer_profile.supports_lobby_photo
+
+func _read_photo_chunk(data: PackedByteArray) -> void:
+	var chunk: int = data[1]
+	if chunk >= PHOTO_CHUNK_COUNT:
+		return
+	if peer_profile.photo != null:
+		# A repeated transfer means the acknowledgement may have been lost.
+		if chunk == 0 or chunk == PHOTO_CHUNK_COUNT - 1:
+			_send(_peer_id(), _member_token, Message.PHOTO_RECEIVED)
+		return
+	if _photo_chunks.is_empty():
+		_photo_chunks.resize(PHOTO_CHUNK_COUNT)
+		_photo_in.resize(PartyProfile.LOBBY_PHOTO_BYTES)
+	if _photo_chunks[chunk] != 0:
+		return
+	_photo_chunks[chunk] = 1
+	_photo_chunks_received += 1
+	for byte: int in range(3):
+		_photo_in[chunk * 3 + byte] = data[2 + byte]
+	if _photo_chunks_received == PHOTO_CHUNK_COUNT:
+		peer_profile.photo = PartyProfile.decode_lobby_photo(_photo_in)
+		_send(_peer_id(), _member_token, Message.PHOTO_RECEIVED)
+		changed.emit()
 
 func _read_announcement(id: int, command: int, data: PackedByteArray, now: int) -> void:
 	if id == 0:
@@ -255,6 +324,7 @@ func _read_member_profile(command: int, data: PackedByteArray) -> void:
 		peer_profile = PartyProfile.decode(_member_chunks)
 		_member_received = 0
 		if peer_profile != null:
+			_photo_wait_until = Time.get_ticks_msec() + PHOTO_WAIT_MS
 			_send(GUEST_ID, _member_token, Message.PRESENT)
 			changed.emit()
 

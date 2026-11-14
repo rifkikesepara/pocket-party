@@ -307,6 +307,9 @@ func _update_room() -> void:
 	local_avatar.photo_texture = home_avatar.photo_texture
 	var joining: bool = peer != null and not peer_avatar.visible
 	peer_avatar.visible = peer != null
+	if peer != null:
+		peer_avatar.avatar = peer.avatar
+	peer_avatar.photo_texture = ImageTexture.create_from_image(peer.photo) if peer != null and peer.photo != null else null
 	if joining and not _profile.reduced_motion:
 		if _peer_tween != null:
 			_peer_tween.kill()
@@ -318,9 +321,11 @@ func _update_room() -> void:
 	peer_name.text = peer.nickname if peer != null else "Boş koltuk"
 	peer_role.text = ("Misafir" if host else "Ev sahibi") if peer != null else "Oyuncu bekleniyor"
 	start_game.visible = host
-	start_game.disabled = peer == null or lobby.starting
+	start_game.disabled = peer == null or lobby.starting or lobby.photos_syncing()
 	if lobby.starting:
 		room_status.text = "Dinamit açılıyor…"
+	elif lobby.photos_syncing():
+		room_status.text = "Avatar fotoğrafları eşitleniyor…"
 	elif not host:
 		room_status.text = "Ev sahibinin oyunu açması bekleniyor."
 	elif peer != null:
