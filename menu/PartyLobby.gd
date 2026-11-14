@@ -80,6 +80,7 @@ var peer_profile: PartyProfile
 var rooms: Dictionary[int, NearbyRoom] = {}
 var room_id: int = 0
 var starting: bool = false
+var selected_game_id: int = 1
 
 var _host: bool = false
 var _previous_player_id: int = 0
@@ -274,7 +275,7 @@ func _tick() -> void:
 				_send(BROADCAST, room_id, Message.BEACON)
 				_queue_profile(Message.OPEN_PROFILE)
 			elif starting and _send_start_next:
-				_send(GUEST_ID, _member_token, Message.START)
+				_send(GUEST_ID, _member_token, Message.START, PackedByteArray([selected_game_id]))
 				_send_start_next = false
 			else:
 				var token: PackedByteArray = PackedByteArray([0, 0, 0, 0])
@@ -349,6 +350,8 @@ func _on_packet(sender: int, target: int, id: int, data: PackedByteArray) -> voi
 		Message.START:
 			if state == State.GUEST:
 				_last_seen = now
+				if data.size() >= 2 and data[1] in [1, 2]:
+					selected_game_id = data[1]
 				_enter_game()
 		Message.READY:
 			if state == State.HOST and starting:

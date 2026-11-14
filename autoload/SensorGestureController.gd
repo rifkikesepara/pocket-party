@@ -39,6 +39,19 @@ func _process(delta: float) -> void:
 		if _flick_cooldown <= 0.0 and accel.length() > FLICK_ACCEL_THRESHOLD:
 			_flick_cooldown = 0.4
 			flick_detected.emit(smoothed_heading, accel.length())
+	else:
+		var kb_roll: float = Input.get_axis("ui_left", "ui_right")
+		var kb_pitch: float = Input.get_axis("ui_down", "ui_up")
+		if Input.is_key_pressed(KEY_A):
+			kb_roll -= 1.0
+		if Input.is_key_pressed(KEY_D):
+			kb_roll += 1.0
+		if Input.is_key_pressed(KEY_W):
+			kb_pitch += 1.0
+		if Input.is_key_pressed(KEY_S):
+			kb_pitch -= 1.0
+		if kb_roll != 0.0 or kb_pitch != 0.0:
+			tilt_changed.emit(clampf(kb_pitch, -1.0, 1.0) * 0.45, clampf(kb_roll, -1.0, 1.0) * 0.45)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:

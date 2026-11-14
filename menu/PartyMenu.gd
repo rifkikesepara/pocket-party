@@ -1,6 +1,7 @@
 extends Control
 
 const DINAMIT_SCENE: PackedScene = preload("res://minigames/dinamit/Dinamit.tscn")
+const DENGE_SCENE: PackedScene = preload("res://minigames/denge/Denge.tscn")
 const FACE_NAMES: Array[String] = ["Neşeli", "Gülen", "Şaşkın", "Meraklı", "Kedi", "Bıyıklı", "Şapşal", "Uzaylı"]
 const COLOR_NAMES: Array[String] = ["Bal", "Nane", "Leylak", "Çilek", "Gök", "Şeftali"]
 
@@ -49,13 +50,15 @@ var _profile: PartyProfile = PartyProfile.new()
 var _draft_color: int = 0
 var _draft_face: int = 0
 var _after_profile: Callable
-var _game: DinamitMinigame
+var _game: MiniGameBase
 var _draft_photo: Image
 var _photo_picker: AvatarPhotoPicker
 var _page_tween: Tween
 var _avatar_tween: Tween
 var _peer_tween: Tween
 var _keyboard_height: int = 0
+var _selected_card_style: StyleBox
+var _unselected_card_style: StyleBox
 
 func _ready() -> void:
 	_profile.load_saved()
@@ -71,7 +74,10 @@ func _ready() -> void:
 	edit_profile.pressed.connect(_show_profile)
 	(%SettingsButton as Button).pressed.connect(_show_page.bind(settings))
 	(%ChooseGame as Button).pressed.connect(_show_page.bind(games))
-	(%SelectDinamit as Button).pressed.connect(_show_page.bind(room))
+	(%SelectDinamit as Button).pressed.connect(_select_game.bind(1))
+	(%DengePreview as Button).pressed.connect(_select_game.bind(2))
+	_selected_card_style = (%SelectDinamit as Button).get_theme_stylebox("normal")
+	_unselected_card_style = (%DengePreview as Button).get_theme_stylebox("normal")
 	host_button.pressed.connect(_require_profile.bind(_host_room))
 	search_button.pressed.connect(_require_profile.bind(_search_rooms))
 	back.pressed.connect(_navigate_back)
@@ -90,6 +96,8 @@ func _ready() -> void:
 	lobby.lobby_ended.connect(_on_lobby_ended)
 	get_viewport().size_changed.connect(_apply_safe_area)
 	_apply_safe_area()
+	if OS.has_feature("mobile"):
+		_disable_touch_hover(self)
 	_show_home()
 
 func _process(_delta: float) -> void:
@@ -341,7 +349,7 @@ func _update_room() -> void:
 	start_game.visible = host
 	start_game.disabled = peer == null or lobby.starting or lobby.photos_syncing()
 	if lobby.starting:
-		room_status.text = "Dinamit açılıyor…"
+		room_status.text = "%s açılıyor…" % ("Denge" if lobby.selected_game_id == 2 else "Dinamit")
 	elif lobby.photos_syncing():
 		room_status.text = "Avatar fotoğrafları eşitleniyor…"
 	elif not host:
@@ -351,13 +359,30 @@ func _update_room() -> void:
 	else:
 		room_status.text = "1 / 2 oyuncu · Arkadaşın Yakındaki lobiler’den sana katılabilir."
 
+func _select_game(id: int) -> void:
+	lobby.selected_game_id = id
+	var choose: Button = %ChooseGame as Button
+	var is_denge: bool = id == 2
+	(choose.get_node("Icon") as Control).set("artwork", 4 if is_denge else 3)
+	(choose.get_node("Icon") as Control).queue_redraw()
+	(choose.get_node("GameName") as Label).text = "DENGE" if is_denge else "DİNAMİT"
+	(choose.get_node("Mechanic") as Label).text = "Eğ!   /   2 oyuncu" if is_denge else "Savur!   /   2 oyuncu"
+	choose.accessibility_name = "Seçilen oyun %s. Oyunları göster." % ("Denge" if is_denge else "Dinamit")
+	(%SelectDinamit as Button).add_theme_stylebox_override("normal", _unselected_card_style if is_denge else _selected_card_style)
+	(%DengePreview as Button).add_theme_stylebox_override("normal", _selected_card_style if is_denge else _unselected_card_style)
+	if OS.has_feature("mobile"):
+		(%SelectDinamit as Button).add_theme_stylebox_override("hover", _unselected_card_style if is_denge else _selected_card_style)
+		(%DengePreview as Button).add_theme_stylebox_override("hover", _selected_card_style if is_denge else _unselected_card_style)
+	_show_page(room)
+
 func _open_game() -> void:
-	_game = DINAMIT_SCENE.instantiate() as DinamitMinigame
-	_game.lobby_tag = lobby.game_tag()
-	_game.lobby_local_name = _profile.nickname
-	_game.lobby_peer_name = lobby.peer_profile.nickname
-	_game.prefer_reduced_motion = _profile.reduced_motion
-	_game.leave_lobby_requested.connect(_leave_to_home)
+	var scene: PackedScene = DENGE_SCENE if lobby.selected_game_id == 2 else DINAMIT_SCENE
+	_game = scene.instantiate() as MiniGameBase
+	_game.set("lobby_tag", lobby.game_tag())
+	_game.set("lobby_local_name", _profile.nickname)
+	_game.set("lobby_peer_name", lobby.peer_profile.nickname)
+	_game.set("prefer_reduced_motion", _profile.reduced_motion)
+	_game.connect("leave_lobby_requested", _leave_to_home)
 	menu.hide()
 	add_child(_game)
 
@@ -396,6 +421,20 @@ func _close_game() -> void:
 		_game.queue_free()
 		_game = null
 	menu.show()
+
+func _disable_touch_hover(root: Node) -> void:
+	if theme != null:
+		theme.set_stylebox("hover", "Button", theme.get_stylebox("normal", "Button"))
+		theme.set_stylebox("hover_mirrored", "Button", theme.get_stylebox("normal", "Button"))
+		theme.set_color("font_hover_color", "Button", theme.get_color("font_color", "Button"))
+	for child: Node in root.get_children():
+		if child is Button:
+			var btn: Button = child as Button
+			if btn.has_theme_stylebox_override("normal"):
+				btn.add_theme_stylebox_override("hover", btn.get_theme_stylebox("normal"))
+			elif btn.has_theme_stylebox_override("hover"):
+				btn.remove_theme_stylebox_override("hover")
+		_disable_touch_hover(child)
 
 func _apply_safe_area() -> void:
 	if not OS.has_feature("mobile"):

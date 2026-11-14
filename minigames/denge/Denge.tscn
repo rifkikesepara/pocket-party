@@ -1,0 +1,184 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://minigames/denge/Denge.gd" id="1"]
+[ext_resource type="Script" path="res://minigames/denge/DengeArtwork.gd" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/BarlowCondensed-ExtraBold.ttf" id="3"]
+[ext_resource type="FontFile" path="res://assets/fonts/BarlowCondensed-BlackItalic.ttf" id="4"]
+
+[sub_resource type="StyleBoxFlat" id="Card"]
+bg_color = Color(0.0627451, 0.0823529, 0.423529, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+
+[node name="Denge" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0313726, 0.105882, 0.615686, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 24
+
+[node name="Screen" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/Screen"]
+layout_mode = 2
+
+[node name="MenuButton" type="Button" parent="MarginContainer/Screen/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 18
+text = "‹ Lobi"
+
+[node name="RoundLabel" type="Label" parent="MarginContainer/Screen/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.901961, 0.937255, 0.156863, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 24
+text = "DENGE · TUR 1"
+horizontal_alignment = 1
+
+[node name="ScoreCard" type="PanelContainer" parent="MarginContainer/Screen"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Scores" type="HBoxContainer" parent="MarginContainer/Screen/ScoreCard"]
+layout_mode = 2
+
+[node name="LocalBox" type="VBoxContainer" parent="MarginContainer/Screen/ScoreCard/Scores"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LocalPlayer" type="Label" parent="MarginContainer/Screen/ScoreCard/Scores/LocalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.964706, 0.87451, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 16
+text = "Sen"
+horizontal_alignment = 1
+
+[node name="LocalScore" type="Label" parent="MarginContainer/Screen/ScoreCard/Scores/LocalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.901961, 0.937255, 0.156863, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 1
+
+[node name="TimerLabel" type="Label" parent="MarginContainer/Screen/ScoreCard/Scores"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.67451, 0.501961, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 26
+text = "0.0 sn"
+vertical_alignment = 1
+
+[node name="PeerBox" type="VBoxContainer" parent="MarginContainer/Screen/ScoreCard/Scores"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PeerPlayer" type="Label" parent="MarginContainer/Screen/ScoreCard/Scores/PeerBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.964706, 0.87451, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 16
+text = "Rakip"
+horizontal_alignment = 1
+
+[node name="PeerScore" type="Label" parent="MarginContainer/Screen/ScoreCard/Scores/PeerBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.482353, 0.878431, 0.678431, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 1
+
+[node name="StageStatus" type="Label" parent="MarginContainer/Screen"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.964706, 0.87451, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 34
+text = "HAZIR"
+horizontal_alignment = 1
+
+[node name="Artwork" type="Control" parent="MarginContainer/Screen"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("2")
+
+[node name="Footer" type="PanelContainer" parent="MarginContainer/Screen"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="FooterBox" type="VBoxContainer" parent="MarginContainer/Screen/Footer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="FooterLabel" type="Label" parent="MarginContainer/Screen/Footer/FooterBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.964706, 0.87451, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 22
+text = "Telefonu sabit tut"
+horizontal_alignment = 1
+
+[node name="HintLabel" type="Label" parent="MarginContainer/Screen/Footer/FooterBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.67451, 0.501961, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+text = "Eğerek veya sürükleyerek topu çemberde tut"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="MarginContainer/Screen"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 24
+text = "TURU BAŞLAT"

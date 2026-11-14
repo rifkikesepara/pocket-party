@@ -1166,9 +1166,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("poster_card")
 theme_override_styles/normal = SubResource("Game")
-disabled = true
-theme_override_styles/disabled = SubResource("Game")
-accessibility_name = "DENGE Eğ!  ·  Yakında"
+accessibility_name = "DENGE Eğ!"
 
 [node name="Icon" type="Control" parent="Menu/SafeMargin/Pages/Games/DengePreviewPoster/DengePreview"]
 
@@ -1204,7 +1202,7 @@ theme_override_fonts/font = ExtResource("display")
 layout_mode = 2
 mouse_filter = 2
 
-text = "Eğ!  ·  Yakında"
+text = "Eğ!"
 theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
 theme_override_fonts/font = ExtResource("bold")
