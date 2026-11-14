@@ -275,6 +275,8 @@ func _update_room_list() -> void:
 		item.add_theme_constant_override("separation", 10)
 		var avatar: PartyAvatar = PartyAvatar.new()
 		avatar.avatar = candidate.profile.avatar
+		if candidate.profile.photo != null:
+			avatar.photo_texture = ImageTexture.create_from_image(candidate.profile.photo)
 		avatar.custom_minimum_size = Vector2(48, 48)
 		avatar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		item.add_child(avatar)

@@ -13,6 +13,7 @@ const LOBBY_PHOTO_SIDE: int = 24
 const LOBBY_PHOTO_BYTES: int = LOBBY_PHOTO_SIDE * LOBBY_PHOTO_SIDE
 # The nickname and its terminator occupy bytes 1–25.
 const PHOTO_SUPPORT_OFFSET: int = 26
+const WEB_PHOTO_BYTES: int = 768
 
 var nickname: String = ""
 var avatar: int = 0
@@ -20,6 +21,7 @@ var photo: Image
 var reduced_motion: bool = false
 var supports_lobby_photo: bool = false
 var shares_lobby_photo: bool = false
+var supports_web_photo: bool = false
 
 func load_saved() -> void:
 	var config: ConfigFile = ConfigFile.new()
@@ -62,6 +64,7 @@ func encode() -> PackedByteArray:
 	wire.append_array(nickname.to_utf8_buffer())
 	wire.resize(WIRE_SIZE)
 	wire[PHOTO_SUPPORT_OFFSET] = 3 if photo != null else 1
+	wire[PHOTO_SUPPORT_OFFSET] |= 4
 	return wire
 
 static func decode(wire: PackedByteArray) -> PartyProfile:
@@ -80,7 +83,31 @@ static func decode(wire: PackedByteArray) -> PartyProfile:
 	profile.avatar = wire[0]
 	profile.supports_lobby_photo = (wire[PHOTO_SUPPORT_OFFSET] & 1) != 0
 	profile.shares_lobby_photo = (wire[PHOTO_SUPPORT_OFFSET] & 2) != 0
+	profile.supports_web_photo = (wire[PHOTO_SUPPORT_OFFSET] & 4) != 0
 	return profile
+
+func encode_web_photo() -> PackedByteArray:
+	if photo == null:
+		return PackedByteArray()
+	for side: int in [64, 48, 32, 24]:
+		var preview: Image = photo.duplicate() as Image
+		preview.resize(side, side, Image.INTERPOLATE_LANCZOS)
+		preview.convert(Image.FORMAT_RGB8)
+		var bytes: PackedByteArray = preview.save_webp_to_buffer(true, 0.68)
+		if not bytes.is_empty() and bytes.size() <= WEB_PHOTO_BYTES - 2:
+			var wire: PackedByteArray = PackedByteArray([0, 0])
+			wire.encode_u16(0, bytes.size())
+			wire.append_array(bytes)
+			wire.resize(ceili(wire.size() / 3.0) * 3)
+			return wire
+	return PackedByteArray()
+
+static func decode_web_photo(wire: PackedByteArray) -> Image:
+	var length: int = wire.decode_u16(0)
+	var preview: Image = Image.new()
+	if preview.load_webp_from_buffer(wire.slice(2, 2 + length)) != OK:
+		return null
+	return preview
 
 func encode_lobby_photo() -> PackedByteArray:
 	if photo == null or photo.is_empty():

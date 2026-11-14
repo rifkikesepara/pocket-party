@@ -17,12 +17,37 @@ const FRAGMENT_INTERVAL: float = 0.045
 const PHOTO_CHUNK_COUNT: int = PartyProfile.LOBBY_PHOTO_BYTES / 3
 const PHOTO_INTERVAL: float = 0.03
 const PHOTO_WAIT_MS: int = 22000
+const WEB_PHOTO: int = 137
+const OPEN_WEB_PHOTO: int = 138
+const WEB_PHOTO_ACK: int = 139
+const WEB_PHOTO_CHUNKS: int = PartyProfile.WEB_PHOTO_BYTES / 3
+
+class WebPhoto:
+	var data: PackedByteArray
+	var seen: PackedByteArray
+
+	func receive(packet: PackedByteArray) -> Image:
+		if seen.is_empty():
+			seen.resize(WEB_PHOTO_CHUNKS)
+			data.resize(PartyProfile.WEB_PHOTO_BYTES)
+		var index: int = packet[1]
+		seen[index] = 1
+		for byte: int in range(3):
+			data[index * 3 + byte] = packet[2 + byte]
+		var length: int = data.decode_u16(0)
+		if length <= 0 or length > data.size() - 2:
+			return null
+		for chunk: int in range(ceili((length + 2) / 3.0)):
+			if seen[chunk] == 0:
+				return null
+		return PartyProfile.decode_web_photo(data)
 
 class NearbyRoom:
 	var last_seen: int
 	var profile: PartyProfile
 	var chunks: PackedByteArray
 	var received: int = 0
+	var web_photo: WebPhoto = WebPhoto.new()
 
 var state: State = State.IDLE
 var local_profile: PartyProfile
@@ -49,6 +74,9 @@ var _photo_chunks_received: int = 0
 var _photo_cursor: int = 0
 var _photo_confirmed: bool = false
 var _photo_wait_until: int = 0
+var _web_out: PackedByteArray
+var _web_in: WebPhoto = WebPhoto.new()
+var _web_cursor: int = 0
 
 func _ready() -> void:
 	PartyNetworkBridge.lobby_packet_received.connect(_on_packet)
@@ -112,6 +140,7 @@ func _prepare(profile: PartyProfile, role: int) -> bool:
 	PartyNetworkBridge.set_local_player_id(role)
 	local_profile = profile
 	_photo_out = profile.encode_lobby_photo()
+	_web_out = profile.encode_web_photo()
 	return true
 
 func _reset() -> void:
@@ -141,6 +170,8 @@ func _clear_member() -> void:
 	_photo_cursor = 0
 	_photo_confirmed = false
 	_photo_wait_until = 0
+	_web_in = WebPhoto.new()
+	_web_cursor = 0
 
 func _process(delta: float) -> void:
 	if state == State.IDLE:
@@ -166,13 +197,24 @@ func _process(delta: float) -> void:
 		# Space profile fragments across frames for BLE write capacity.
 		_until_fragment = FRAGMENT_INTERVAL
 		PartyNetworkBridge.send_lobby_packet(BROADCAST if _host and _member_token == 0 else _peer_id(), room_id if _host and _member_token == 0 else _member_token, _pending.pop_front())
+	elif _until_fragment <= 0.0 and not _web_out.is_empty() and state == State.HOST and _member_token == 0:
+		_send_web_photo(BROADCAST, room_id, OPEN_WEB_PHOTO)
 	elif _until_fragment <= 0.0 and _photo_exchange_active() and not _photo_confirmed and not _photo_out.is_empty():
+		if peer_profile.supports_web_photo and not _web_out.is_empty():
+			_send_web_photo(_peer_id(), _member_token, WEB_PHOTO)
+			return
 		_until_fragment = PHOTO_INTERVAL
 		var offset: int = _photo_cursor * 3
 		_send(_peer_id(), _member_token, Message.PHOTO_CHUNK, PackedByteArray([
 			_photo_cursor, _photo_out[offset], _photo_out[offset + 1], _photo_out[offset + 2],
 		]))
 		_photo_cursor = (_photo_cursor + 1) % PHOTO_CHUNK_COUNT
+
+func _send_web_photo(target: int, token: int, command: int) -> void:
+	_until_fragment = 0.012
+	var offset: int = _web_cursor * 3
+	_send(target, token, command, PackedByteArray([_web_cursor, _web_out[offset], _web_out[offset + 1], _web_out[offset + 2]]))
+	_web_cursor = (_web_cursor + 1) % (_web_out.size() / 3)
 
 func _tick() -> void:
 	_until_tick = TICK_SEC
@@ -235,6 +277,18 @@ func _on_packet(sender: int, target: int, id: int, data: PackedByteArray) -> voi
 	if id != _member_token:
 		return
 	match command:
+		WEB_PHOTO:
+			if target == PartyNetworkBridge.local_player_id and _photo_exchange_active():
+				if peer_profile.photo == null:
+					peer_profile.photo = _web_in.receive(data)
+					if peer_profile.photo != null:
+						changed.emit()
+				if peer_profile.photo != null:
+					_send(_peer_id(), _member_token, WEB_PHOTO_ACK)
+		WEB_PHOTO_ACK:
+			if target == PartyNetworkBridge.local_player_id and _photo_exchange_active() and not _photo_confirmed:
+				_photo_confirmed = true
+				changed.emit()
 		Message.LEAVE:
 			_member_departed("Rakibin lobiden ayrıldı.")
 		Message.PRESENT:
@@ -299,6 +353,13 @@ func _read_announcement(id: int, command: int, data: PackedByteArray, now: int) 
 			entry.chunks.resize(PartyProfile.WIRE_SIZE)
 			rooms[id] = entry
 		rooms[id].last_seen = now
+		return
+	if command == OPEN_WEB_PHOTO and rooms.has(id):
+		var room: NearbyRoom = rooms[id]
+		if room.profile != null and room.profile.photo == null:
+			room.profile.photo = room.web_photo.receive(data)
+			if room.profile.photo != null:
+				changed.emit()
 		return
 	var index: int = command - Message.OPEN_PROFILE
 	if not rooms.has(id) or index < 0 or index >= PartyProfile.CHUNK_COUNT:
