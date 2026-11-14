@@ -21,6 +21,30 @@ const WEB_PHOTO: int = 137
 const OPEN_WEB_PHOTO: int = 138
 const WEB_PHOTO_ACK: int = 139
 const WEB_PHOTO_CHUNKS: int = PartyProfile.WEB_PHOTO_BYTES / 3
+const FULL_PHOTO: int = 140
+const OPEN_FULL_PHOTO: int = 141
+
+class FullPhoto:
+	var data: PackedByteArray
+	var seen: PackedByteArray
+	var contiguous: int = 0
+
+	func receive(packet: PackedByteArray) -> Image:
+		var index: int = packet.decode_u16(1)
+		if index >= 32767:
+			return null
+		if seen.is_empty():
+			seen.resize(32767)
+			data.resize(65534)
+		seen[index] = 1
+		data[index * 2] = packet[3]
+		data[index * 2 + 1] = packet[4]
+		while contiguous < seen.size() and seen[contiguous] != 0:
+			contiguous += 1
+		var length: int = data.decode_u16(0)
+		if length == 0 or contiguous * 2 < length + 2:
+			return null
+		return PartyProfile.decode_web_photo(data)
 
 class WebPhoto:
 	var data: PackedByteArray
@@ -48,6 +72,7 @@ class NearbyRoom:
 	var chunks: PackedByteArray
 	var received: int = 0
 	var web_photo: WebPhoto = WebPhoto.new()
+	var full_photo: FullPhoto = FullPhoto.new()
 
 var state: State = State.IDLE
 var local_profile: PartyProfile
@@ -77,6 +102,10 @@ var _photo_wait_until: int = 0
 var _web_out: PackedByteArray
 var _web_in: WebPhoto = WebPhoto.new()
 var _web_cursor: int = 0
+var _full_out: PackedByteArray
+var _full_in: FullPhoto = FullPhoto.new()
+var _full_cursor: int = 0
+var _open_preview_next: bool = true
 
 func _ready() -> void:
 	PartyNetworkBridge.lobby_packet_received.connect(_on_packet)
@@ -141,6 +170,7 @@ func _prepare(profile: PartyProfile, role: int) -> bool:
 	local_profile = profile
 	_photo_out = profile.encode_lobby_photo()
 	_web_out = profile.encode_web_photo()
+	_full_out = profile.encode_full_photo()
 	return true
 
 func _reset() -> void:
@@ -172,6 +202,9 @@ func _clear_member() -> void:
 	_photo_wait_until = 0
 	_web_in = WebPhoto.new()
 	_web_cursor = 0
+	_full_cursor = 0
+	_full_in = FullPhoto.new()
+	_open_preview_next = true
 
 func _process(delta: float) -> void:
 	if state == State.IDLE:
@@ -198,7 +231,14 @@ func _process(delta: float) -> void:
 		_until_fragment = FRAGMENT_INTERVAL
 		PartyNetworkBridge.send_lobby_packet(BROADCAST if _host and _member_token == 0 else _peer_id(), room_id if _host and _member_token == 0 else _member_token, _pending.pop_front())
 	elif _until_fragment <= 0.0 and not _web_out.is_empty() and state == State.HOST and _member_token == 0:
-		_send_web_photo(BROADCAST, room_id, OPEN_WEB_PHOTO)
+		if _open_preview_next or _full_out.is_empty():
+			_send_web_photo(BROADCAST, room_id, OPEN_WEB_PHOTO)
+			_open_preview_next = _web_cursor != 0
+		else:
+			_send_full_photo(BROADCAST, room_id, OPEN_FULL_PHOTO)
+			_open_preview_next = _full_cursor == 0
+	elif _until_fragment <= 0.0 and _photo_exchange_active() and _photo_confirmed and peer_profile.supports_web_photo and not _full_out.is_empty():
+		_send_full_photo(_peer_id(), _member_token, FULL_PHOTO)
 	elif _until_fragment <= 0.0 and _photo_exchange_active() and not _photo_confirmed and not _photo_out.is_empty():
 		if peer_profile.supports_web_photo and not _web_out.is_empty():
 			_send_web_photo(_peer_id(), _member_token, WEB_PHOTO)
@@ -215,6 +255,14 @@ func _send_web_photo(target: int, token: int, command: int) -> void:
 	var offset: int = _web_cursor * 3
 	_send(target, token, command, PackedByteArray([_web_cursor, _web_out[offset], _web_out[offset + 1], _web_out[offset + 2]]))
 	_web_cursor = (_web_cursor + 1) % (_web_out.size() / 3)
+
+func _send_full_photo(target: int, token: int, command: int) -> void:
+	_until_fragment = 0.012
+	var offset: int = _full_cursor * 2
+	var payload: PackedByteArray = PackedByteArray([0, 0, _full_out[offset], _full_out[offset + 1]])
+	payload.encode_u16(0, _full_cursor)
+	_send(target, token, command, payload)
+	_full_cursor = (_full_cursor + 1) % (_full_out.size() / 2)
 
 func _tick() -> void:
 	_until_tick = TICK_SEC
@@ -277,6 +325,9 @@ func _on_packet(sender: int, target: int, id: int, data: PackedByteArray) -> voi
 	if id != _member_token:
 		return
 	match command:
+		FULL_PHOTO:
+			if target == PartyNetworkBridge.local_player_id and _photo_exchange_active():
+				_read_full_photo(peer_profile, _full_in, data)
 		WEB_PHOTO:
 			if target == PartyNetworkBridge.local_player_id and _photo_exchange_active():
 				if peer_profile.photo == null:
@@ -354,6 +405,11 @@ func _read_announcement(id: int, command: int, data: PackedByteArray, now: int) 
 			rooms[id] = entry
 		rooms[id].last_seen = now
 		return
+	if command == OPEN_FULL_PHOTO and rooms.has(id):
+		var room: NearbyRoom = rooms[id]
+		if room.profile != null:
+			_read_full_photo(room.profile, room.full_photo, data)
+		return
 	if command == OPEN_WEB_PHOTO and rooms.has(id):
 		var room: NearbyRoom = rooms[id]
 		if room.profile != null and room.profile.photo == null:
@@ -373,6 +429,14 @@ func _read_announcement(id: int, command: int, data: PackedByteArray, now: int) 
 		entry.received = 0
 		if entry.profile != null:
 			changed.emit()
+
+func _read_full_photo(profile: PartyProfile, transfer: FullPhoto, data: PackedByteArray) -> void:
+	if profile.photo != null and profile.photo.get_width() >= PartyProfile.PHOTO_SIZE:
+		return
+	var photo: Image = transfer.receive(data)
+	if photo != null and photo.get_size() == Vector2i(PartyProfile.PHOTO_SIZE, PartyProfile.PHOTO_SIZE):
+		profile.photo = photo
+		changed.emit()
 
 func _read_member_profile(command: int, data: PackedByteArray) -> void:
 	var index: int = command - Message.MEMBER_PROFILE

@@ -102,6 +102,18 @@ func encode_web_photo() -> PackedByteArray:
 			return wire
 	return PackedByteArray()
 
+func encode_full_photo() -> PackedByteArray:
+	if photo == null:
+		return PackedByteArray()
+	var bytes: PackedByteArray = photo.save_webp_to_buffer(true, 0.9)
+	if bytes.is_empty() or bytes.size() > 65532:
+		return PackedByteArray()
+	var wire: PackedByteArray = PackedByteArray([0, 0])
+	wire.encode_u16(0, bytes.size())
+	wire.append_array(bytes)
+	wire.resize((wire.size() + 1) & ~1)
+	return wire
+
 static func decode_web_photo(wire: PackedByteArray) -> Image:
 	var length: int = wire.decode_u16(0)
 	var preview: Image = Image.new()
