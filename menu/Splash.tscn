@@ -31,7 +31,7 @@ mouse_filter = 2
 texture_filter = 4
 texture = ExtResource("2")
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
 [node name="ErrorMessage" type="Label" parent="."]
 unique_name_in_owner = true
