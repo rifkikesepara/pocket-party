@@ -1,786 +1,1382 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://menu/PartyMenu.gd" id="1_menu"]
-[ext_resource type="Script" path="res://menu/PartyLobby.gd" id="2_lobby"]
-[ext_resource type="Script" path="res://menu/PartyAvatar.gd" id="3_avatar"]
-[ext_resource type="Script" path="res://menu/PartyMenuArt.gd" id="4_art"]
+[ext_resource type="Script" path="res://menu/PartyMenu.gd" id="menu"]
 
-[sub_resource type="FontVariation" id="Heavy"]
-variation_embolden = 1.05
+[ext_resource type="Script" path="res://menu/PartyLobby.gd" id="lobby"]
 
-[sub_resource type="StyleBoxFlat" id="Card"]
-content_margin_left = 16.0
-content_margin_top = 12.0
-content_margin_right = 16.0
-content_margin_bottom = 12.0
-bg_color = Color(0.14118, 0.10980, 0.17647, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.34118, 0.27059, 0.37647, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
+[ext_resource type="Script" path="res://menu/PartyAvatar.gd" id="avatar"]
 
-[sub_resource type="StyleBoxFlat" id="Hero"]
+[ext_resource type="Script" path="res://menu/PartyMenuArt.gd" id="art"]
+
+[ext_resource type="Script" path="res://menu/PosterCard.gd" id="poster_card"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/BarlowCondensed-ExtraBold.ttf" id="bold"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/BarlowCondensed-BlackItalic.ttf" id="display"]
+
+[sub_resource type="StyleBoxFlat" id="Pill"]
+bg_color = Color(1, 0.965, 0.875, 1)
+border_color = Color(1, 0.965, 0.875, 1)
+
+border_width_left = 0
 content_margin_left = 14.0
-content_margin_top = 0.0
+
+border_width_right = 0
 content_margin_right = 14.0
-content_margin_bottom = 0.0
-bg_color = Color(0.12941, 0.09412, 0.16471, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.31765, 0.23529, 0.34902, 1)
-corner_radius_top_left = 22
-corner_radius_top_right = 22
-corner_radius_bottom_right = 22
-corner_radius_bottom_left = 22
 
-[sub_resource type="StyleBoxFlat" id="Button"]
-content_margin_left = 13.0
-content_margin_top = 8.0
-content_margin_right = 13.0
-content_margin_bottom = 8.0
-bg_color = Color(0.18824, 0.14118, 0.23137, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.34118, 0.27059, 0.37647, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+border_width_top = 0
+content_margin_top = 6.0
 
-[sub_resource type="StyleBoxFlat" id="Hover"]
-content_margin_left = 13.0
-content_margin_top = 8.0
-content_margin_right = 13.0
-content_margin_bottom = 8.0
-bg_color = Color(0.26667, 0.20392, 0.31373, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.85490, 0.73333, 0.97255, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+border_width_bottom = 0
+content_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id="Pressed"]
-content_margin_left = 13.0
-content_margin_top = 8.0
-content_margin_right = 13.0
-content_margin_bottom = 8.0
-bg_color = Color(0.31765, 0.25098, 0.37255, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.85490, 0.73333, 0.97255, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+corner_radius_top_left = 32
+
+corner_radius_top_right = 32
+
+corner_radius_bottom_left = 32
+
+corner_radius_bottom_right = 32
+
+shadow_color = Color(0.063, 0.082, 0.424, 1)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="Peach"]
+bg_color = Color(1, 0.675, 0.502, 1)
+border_color = Color(1, 0.965, 0.875, 1)
+
+border_width_left = 0
+content_margin_left = 14.0
+
+border_width_right = 0
+content_margin_right = 14.0
+
+border_width_top = 0
+content_margin_top = 6.0
+
+border_width_bottom = 0
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 32
+
+corner_radius_top_right = 32
+
+corner_radius_bottom_left = 32
+
+corner_radius_bottom_right = 32
+
+shadow_color = Color(0.063, 0.082, 0.424, 1)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="Outline"]
+bg_color = Color(0.03,0.1,0.60,1)
+border_color = Color(1, 0.965, 0.875, 1)
+
+border_width_left = 3
+content_margin_left = 14.0
+
+border_width_right = 3
+content_margin_right = 14.0
+
+border_width_top = 3
+content_margin_top = 6.0
+
+border_width_bottom = 3
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 32
+
+corner_radius_top_right = 32
+
+corner_radius_bottom_left = 32
+
+corner_radius_bottom_right = 32
 
 [sub_resource type="StyleBoxFlat" id="Disabled"]
-content_margin_left = 13.0
-content_margin_top = 8.0
-content_margin_right = 13.0
-content_margin_bottom = 8.0
-bg_color = Color(0.14902, 0.11765, 0.18824, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.27843, 0.22745, 0.32157, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+bg_color = Color(0.75,0.76,0.85,1)
+border_color = Color(1, 0.965, 0.875, 1)
 
-[sub_resource type="StyleBoxFlat" id="Primary"]
-content_margin_left = 13.0
-content_margin_top = 8.0
-content_margin_right = 13.0
-content_margin_bottom = 8.0
-bg_color = Color(1.00000, 0.78824, 0.41176, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1.00000, 0.78824, 0.41176, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+border_width_left = 0
+content_margin_left = 14.0
 
-[sub_resource type="StyleBoxFlat" id="PrimaryHover"]
-content_margin_left = 13.0
-content_margin_top = 8.0
-content_margin_right = 13.0
-content_margin_bottom = 8.0
-bg_color = Color(1.00000, 0.85490, 0.58039, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1.00000, 0.85490, 0.58039, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+border_width_right = 0
+content_margin_right = 14.0
 
-[sub_resource type="StyleBoxFlat" id="PrimaryPressed"]
-content_margin_left = 13.0
-content_margin_top = 8.0
-content_margin_right = 13.0
-content_margin_bottom = 8.0
-bg_color = Color(0.94118, 0.70196, 0.34902, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.94118, 0.70196, 0.34902, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+border_width_top = 0
+content_margin_top = 6.0
+
+border_width_bottom = 0
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 32
+
+corner_radius_top_right = 32
+
+corner_radius_bottom_left = 32
+
+corner_radius_bottom_right = 32
+
+[sub_resource type="StyleBoxFlat" id="Card"]
+bg_color = Color(1, 0.965, 0.875, 1)
+border_color = Color(1, 0.965, 0.875, 1)
+
+border_width_left = 0
+content_margin_left = 14.0
+
+border_width_right = 0
+content_margin_right = 14.0
+
+border_width_top = 0
+content_margin_top = 6.0
+
+border_width_bottom = 0
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 25
+
+corner_radius_top_right = 25
+
+corner_radius_bottom_left = 25
+
+corner_radius_bottom_right = 25
+
+shadow_color = Color(0.063, 0.082, 0.424, 1)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="Game"]
+bg_color = Color(1, 0.965, 0.875, 1)
+border_color = Color(1, 0.675, 0.502, 1)
+
+border_width_left = 3
+content_margin_left = 14.0
+
+border_width_right = 3
+content_margin_right = 14.0
+
+border_width_top = 3
+content_margin_top = 6.0
+
+border_width_bottom = 3
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 22
+
+corner_radius_top_right = 22
+
+corner_radius_bottom_left = 22
+
+corner_radius_bottom_right = 22
+
+shadow_color = Color(0.063, 0.082, 0.424, 1)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="Selected"]
+bg_color = Color(1, 0.675, 0.502, 1)
+border_color = Color(1, 0.965, 0.875, 1)
+
+border_width_left = 4
+content_margin_left = 14.0
+
+border_width_right = 4
+content_margin_right = 14.0
+
+border_width_top = 4
+content_margin_top = 6.0
+
+border_width_bottom = 4
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 22
+
+corner_radius_top_right = 22
+
+corner_radius_bottom_left = 22
+
+corner_radius_bottom_right = 22
+
+shadow_color = Color(0.063, 0.082, 0.424, 1)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
 
 [sub_resource type="StyleBoxFlat" id="Input"]
+bg_color = Color(1, 0.965, 0.875, 1)
+border_color = Color(1, 0.965, 0.875, 1)
+
+border_width_left = 0
 content_margin_left = 14.0
-content_margin_top = 8.0
+
+border_width_right = 0
 content_margin_right = 14.0
-content_margin_bottom = 8.0
-bg_color = Color(0.10588, 0.07843, 0.13725, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.45098, 0.36863, 0.49412, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+
+border_width_top = 0
+content_margin_top = 6.0
+
+border_width_bottom = 0
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 16
+
+corner_radius_top_right = 16
+
+corner_radius_bottom_left = 16
+
+corner_radius_bottom_right = 16
 
 [sub_resource type="StyleBoxFlat" id="Focus"]
-draw_center = false
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.85490, 0.73333, 0.97255, 1)
-corner_radius_top_left = 13
-corner_radius_top_right = 13
-corner_radius_bottom_right = 13
-corner_radius_bottom_left = 13
+bg_color = Color(0,0,0,0)
+border_color = Color(0.9,0.94,0.16,1)
 
-[sub_resource type="Theme" id="Theme_menu"]
+border_width_left = 3
+content_margin_left = 14.0
+
+border_width_right = 3
+content_margin_right = 14.0
+
+border_width_top = 3
+content_margin_top = 6.0
+
+border_width_bottom = 3
+content_margin_bottom = 6.0
+
+corner_radius_top_left = 28
+
+corner_radius_top_right = 28
+
+corner_radius_bottom_left = 28
+
+corner_radius_bottom_right = 28
+
+[sub_resource type="StyleBoxEmpty" id="Empty"]
+
+[sub_resource type="Theme" id="Theme"]
 default_font_size = 16
-ProgressBar/styles/background = SubResource("Disabled")
-ProgressBar/styles/fill = SubResource("Primary")
-Button/colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-Button/colors/font_hover_color = Color(1.00000, 0.94118, 0.90980, 1)
-Button/colors/font_pressed_color = Color(1.00000, 0.94118, 0.90980, 1)
-Button/colors/font_focus_color = Color(1.00000, 0.94118, 0.90980, 1)
-Button/colors/font_disabled_color = Color(0.79608, 0.72157, 0.81176, 1)
-Button/styles/normal = SubResource("Button")
-Button/styles/hover = SubResource("Hover")
-Button/styles/pressed = SubResource("Pressed")
+
+Label/colors/font_color = Color(1, 0.965, 0.875, 1)
+
+Button/styles/normal = SubResource("Pill")
+
+Button/styles/hover = SubResource("Peach")
+
+Button/styles/pressed = SubResource("Peach")
+
 Button/styles/disabled = SubResource("Disabled")
+
 Button/styles/focus = SubResource("Focus")
-PrimaryButton/base_type = &"Button"
-PrimaryButton/colors/font_color = Color(0.15686, 0.10196, 0.19608, 1)
-PrimaryButton/colors/font_hover_color = Color(0.15686, 0.10196, 0.19608, 1)
-PrimaryButton/colors/font_pressed_color = Color(0.15686, 0.10196, 0.19608, 1)
-PrimaryButton/colors/font_focus_color = Color(0.15686, 0.10196, 0.19608, 1)
-PrimaryButton/colors/font_hover_pressed_color = Color(0.15686, 0.10196, 0.19608, 1)
-PrimaryButton/fonts/font = SubResource("Heavy")
-PrimaryButton/font_sizes/font_size = 19
-PrimaryButton/styles/normal = SubResource("Primary")
-PrimaryButton/styles/hover = SubResource("PrimaryHover")
-PrimaryButton/styles/pressed = SubResource("PrimaryPressed")
-LineEdit/colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-LineEdit/colors/font_placeholder_color = Color(0.79608, 0.72157, 0.81176, 1)
+
+Button/colors/font_color = Color(0.063, 0.082, 0.424, 1)
+
+Button/colors/font_hover_color = Color(0.063, 0.082, 0.424, 1)
+
+Button/colors/font_pressed_color = Color(0.063, 0.082, 0.424, 1)
+
+Button/colors/font_focus_color = Color(0.063, 0.082, 0.424, 1)
+
+Button/colors/font_disabled_color = Color(0.063, 0.082, 0.424, 1)
+
+Button/fonts/font = ExtResource("bold")
+Button/font_sizes/font_size = 24
+
+PosterButton/base_type = &"Button"
+PosterButton/font_sizes/font_size = 34
+
+PosterOutline/base_type = &"Button"
+PosterOutline/font_sizes/font_size = 28
+PosterOutline/styles/normal = SubResource("Outline")
+
+PosterOutline/colors/font_color = Color(1, 0.965, 0.875, 1)
+PosterOutline/colors/font_focus_color = Color(1, 0.965, 0.875, 1)
+
+Quiet/base_type = &"Button"
+Quiet/font_sizes/font_size = 18
+Quiet/styles/normal = SubResource("Empty")
+
+Quiet/colors/font_color = Color(1, 0.965, 0.875, 1)
+Quiet/colors/font_focus_color = Color(1, 0.965, 0.875, 1)
+
 LineEdit/styles/normal = SubResource("Input")
 LineEdit/styles/focus = SubResource("Focus")
+LineEdit/font_sizes/font_size = 22
+LineEdit/fonts/font = ExtResource("bold")
+
+LineEdit/colors/font_color = Color(0.063, 0.082, 0.424, 1)
+LineEdit/colors/font_placeholder_color = Color(0.3,0.32,0.5,1)
 
 [node name="PartyMenu" type="Control"]
-layout_mode = 3
+
+layout_mode = 2
+mouse_filter = 2
+
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-theme = SubResource("Theme_menu")
-script = ExtResource("1_menu")
+script = ExtResource("menu")
+theme = SubResource("Theme")
 
 [node name="Lobby" type="Node" parent="."]
+
 unique_name_in_owner = true
-script = ExtResource("2_lobby")
+
+script = ExtResource("lobby")
 
 [node name="Menu" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+
 unique_name_in_owner = true
 
-[node name="Backdrop" type="ColorRect" parent="Menu"]
+layout_mode = 2
+mouse_filter = 2
+
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Backdrop" type="Control" parent="Menu"]
+
+layout_mode = 2
 mouse_filter = 2
-color = Color(0.09020, 0.07059, 0.12157, 1)
+
+script = ExtResource("art")
+artwork = 2
+custom_minimum_size = Vector2(0,0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="SafeMargin" type="MarginContainer" parent="Menu"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-unique_name_in_owner = true
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_bottom = 22
 
-[node name="Layout" type="VBoxContainer" parent="Menu/SafeMargin"]
+[node name="Pages" type="Control" parent="Menu/SafeMargin"]
+
 layout_mode = 2
 mouse_filter = 2
+
+
+
+[node name="Home" type="VBoxContainer" parent="Menu/SafeMargin/Pages"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 12
 
-[node name="Header" type="HBoxContainer" parent="Menu/SafeMargin/Layout"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
 
-[node name="Brand" type="Label" parent="Menu/SafeMargin/Layout/Header"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.85490, 0.73333, 0.97255, 1)
-text = "POCKET PARTY"
-size_flags_horizontal = 3
+[node name="PartyArt" type="Control" parent="Menu/SafeMargin/Pages/Home"]
 
-[node name="Back" type="Button" parent="Menu/SafeMargin/Layout/Header"]
 unique_name_in_owner = true
+
 layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 0
+custom_minimum_size = Vector2(0,280)
+size_flags_vertical = 3
+
+[node name="Host" type="Button" parent="Menu/SafeMargin/Pages/Home"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "LOBİ KUR"
+custom_minimum_size = Vector2(0,70)
 mouse_default_cursor_shape = 2
-text = "‹  Geri"
+theme_type_variation = &"PosterButton"
+
+
+[node name="Search" type="Button" parent="Menu/SafeMargin/Pages/Home"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "YAKINDAKİ LOBİLER"
+custom_minimum_size = Vector2(0,62)
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PosterOutline"
+
+
+[node name="HomeNotice" type="Label" parent="Menu/SafeMargin/Pages/Home"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = ""
+theme_override_font_sizes/font_size = 14
+visible = false
+autowrap_mode = 3
+
+[node name="ProfileLink" type="HBoxContainer" parent="Menu/SafeMargin/Pages/Home"]
+
+layout_mode = 2
+mouse_filter = 2
+
+theme_override_constants/separation = 10
+
+[node name="HomeAvatar" type="Control" parent="Menu/SafeMargin/Pages/Home/ProfileLink"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(36,36)
+script = ExtResource("avatar")
+
+[node name="HomeName" type="Label" parent="Menu/SafeMargin/Pages/Home/ProfileLink"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Profil oluştur"
+theme_override_font_sizes/font_size = 20
+size_flags_horizontal = 3
+text_overrun_behavior = 3
+
+[node name="EditProfile" type="Button" parent="Menu/SafeMargin/Pages/Home/ProfileLink"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "PROFİL  ›"
+custom_minimum_size = Vector2(0,44)
+mouse_default_cursor_shape = 2
+theme_type_variation = &"Quiet"
+
+
+[node name="SettingsButton" type="Button" parent="Menu/SafeMargin/Pages/Home/ProfileLink"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "AYARLAR"
+custom_minimum_size = Vector2(0,44)
+mouse_default_cursor_shape = 2
+theme_type_variation = &"Quiet"
+
+
+[node name="Profile" type="VBoxContainer" parent="Menu/SafeMargin/Pages"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 9
 visible = false
 
-[node name="Scroll" type="ScrollContainer" parent="Menu/SafeMargin/Layout"]
-unique_name_in_owner = true
+[node name="Title" type="Control" parent="Menu/SafeMargin/Pages/Profile"]
+
 layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 1
+custom_minimum_size = Vector2(0,100)
+poster_title = "PROFİLİN"
+
+
+[node name="Preview" type="CenterContainer" parent="Menu/SafeMargin/Pages/Profile"]
+
+layout_mode = 2
+mouse_filter = 2
+
+size_flags_vertical = 3
+
+[node name="EditorAvatar" type="Control" parent="Menu/SafeMargin/Pages/Profile/Preview"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(122,122)
+script = ExtResource("avatar")
+
+[node name="Options" type="HBoxContainer" parent="Menu/SafeMargin/Pages/Profile"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+theme_override_constants/separation = 8
+
+[node name="Color" type="Button" parent="Menu/SafeMargin/Pages/Profile/Options"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "Renk"
+custom_minimum_size = Vector2(0,44)
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+
+[node name="Face" type="Button" parent="Menu/SafeMargin/Pages/Profile/Options"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "Yüz"
+custom_minimum_size = Vector2(0,44)
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+
+[node name="Shuffle" type="Button" parent="Menu/SafeMargin/Pages/Profile/Options"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "↻"
+custom_minimum_size = Vector2(0,44)
+mouse_default_cursor_shape = 2
+custom_minimum_size = Vector2(44,44)
+accessibility_name = "Avatarı karıştır"
+
+[node name="PhotoActions" type="HBoxContainer" parent="Menu/SafeMargin/Pages/Profile"]
+
+layout_mode = 2
+mouse_filter = 2
+
+theme_override_constants/separation = 8
+
+[node name="Photo" type="Button" parent="Menu/SafeMargin/Pages/Profile/PhotoActions"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "Galeriden fotoğraf seç"
+custom_minimum_size = Vector2(0,46)
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+
+[node name="RemovePhoto" type="Button" parent="Menu/SafeMargin/Pages/Profile/PhotoActions"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "Kaldır"
+custom_minimum_size = Vector2(0,46)
+mouse_default_cursor_shape = 2
+visible = false
+theme_override_font_sizes/font_size = 20
+
+[node name="PhotoHint" type="Label" parent="Menu/SafeMargin/Pages/Profile"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Fotoğrafın diğer oyunculara da görünür."
+theme_override_font_sizes/font_size = 14
+visible = false
+autowrap_mode = 3
+
+[node name="InputLabel" type="Label" parent="Menu/SafeMargin/Pages/Profile"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "TAKMA ADIN"
+theme_override_font_sizes/font_size = 18
+
+
+[node name="Nickname" type="LineEdit" parent="Menu/SafeMargin/Pages/Profile"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+custom_minimum_size = Vector2(0,52)
+max_length = 24
+placeholder_text = "Sana ne diyelim?"
+
+[node name="EditorNotice" type="Label" parent="Menu/SafeMargin/Pages/Profile"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = ""
+theme_override_font_sizes/font_size = 14
+visible = false
+autowrap_mode = 3
+
+[node name="SaveProfile" type="Button" parent="Menu/SafeMargin/Pages/Profile"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "HAZIRIM  →"
+custom_minimum_size = Vector2(0,62)
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PosterButton"
+
+
+[node name="Nearby" type="VBoxContainer" parent="Menu/SafeMargin/Pages"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+visible = false
+
+[node name="Title" type="Control" parent="Menu/SafeMargin/Pages/Nearby"]
+
+layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 1
+custom_minimum_size = Vector2(0,150)
+poster_title = "YAKINDAKİ\nLOBİLER"
+peach_ribbon = true
+
+[node name="NearbyStatus" type="Label" parent="Menu/SafeMargin/Pages/Nearby"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Yakındaki lobiler aranıyor."
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="LobbyResults" type="ScrollContainer" parent="Menu/SafeMargin/Pages/Nearby"]
+
+layout_mode = 2
+
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Pages" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll"]
+[node name="RoomList" type="VBoxContainer" parent="Menu/SafeMargin/Pages/Nearby/LobbyResults"]
+
+unique_name_in_owner = true
+
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 0
+
 size_flags_horizontal = 3
-
-[node name="Home" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
-layout_mode = 2
-mouse_filter = 2
 theme_override_constants/separation = 12
+
+[node name="NearbyHelp" type="Label" parent="Menu/SafeMargin/Pages/Nearby"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Arkadaşın LOBİ KUR’a dokunsun.\nBluetooth’unuz açık olsun."
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="Room" type="VBoxContainer" parent="Menu/SafeMargin/Pages"]
+
 unique_name_in_owner = true
 
-[node name="Title" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 0
 
-[node name="Headline" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Title"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 49
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = "Parti başlasın."
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+visible = false
 
-[node name="Lead" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Title"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 17
-theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
-text = "Arkadaşlarınla aynı masada oyna."
+[node name="Title" type="Control" parent="Menu/SafeMargin/Pages/Room"]
 
-[node name="Hero" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("Hero")
 
-[node name="PartyArt" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Hero"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-custom_minimum_size = Vector2(0, 195)
-clip_contents = true
-script = ExtResource("4_art")
+script = ExtResource("art")
+artwork = 1
+custom_minimum_size = Vector2(0,160)
+poster_title = "PARTİ\nLOBİSİ"
+peach_ribbon = true
 
-[node name="ProfileCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+[node name="LocalCard" type="PanelContainer" parent="Menu/SafeMargin/Pages/Room"]
+
 layout_mode = 2
 mouse_filter = 2
+
+custom_minimum_size = Vector2(0,80)
 theme_override_styles/panel = SubResource("Card")
 
-[node name="ProfileRow" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
+[node name="Row" type="HBoxContainer" parent="Menu/SafeMargin/Pages/Room/LocalCard"]
 
-[node name="HomeAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow"]
 layout_mode = 2
 mouse_filter = 2
+
+theme_override_constants/separation = 14
+
+[node name="LocalAvatar" type="Control" parent="Menu/SafeMargin/Pages/Room/LocalCard/Row"]
+
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 60)
-script = ExtResource("3_avatar")
-avatar = 0
 
-[node name="Text" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 1
+
+custom_minimum_size = Vector2(58,58)
+script = ExtResource("avatar")
+
+[node name="Player" type="VBoxContainer" parent="Menu/SafeMargin/Pages/Room/LocalCard/Row"]
+
+layout_mode = 2
+mouse_filter = 2
+
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme_override_constants/separation = 0
 
-[node name="ProfileLabel" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow/Text"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 12
-theme_override_colors/font_color = Color(0.85490, 0.73333, 0.97255, 1)
-text = "OYUNCU PROFİLİ"
+[node name="LocalName" type="Label" parent="Menu/SafeMargin/Pages/Room/LocalCard/Row/Player"]
 
-[node name="HomeName" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow/Text"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 19
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = "Profil oluştur"
 unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = ""
+theme_override_font_sizes/font_size = 29
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
 text_overrun_behavior = 3
 
-[node name="EditProfile" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/ProfileCard/ProfileRow"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-mouse_default_cursor_shape = 2
-text = "Düzenle"
+[node name="LocalRole" type="Label" parent="Menu/SafeMargin/Pages/Room/LocalCard/Row/Player"]
 
-[node name="Actions" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+unique_name_in_owner = true
+
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 8
 
-[node name="Host" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Actions"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 56)
-mouse_default_cursor_shape = 2
-text = "Lobi kur  →"
-theme_type_variation = &"PrimaryButton"
-
-[node name="Search" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Actions"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 52)
-mouse_default_cursor_shape = 2
-text = "Yakındaki lobiler  ›"
-
-[node name="Transport" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
-text = "Yakındaki oyuncularla Bluetooth üzerinden bağlan."
-autowrap_mode = 3
-
-[node name="HomeNotice" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
 text = ""
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+
+
+[node name="Arrow" type="Label" parent="Menu/SafeMargin/Pages/Room/LocalCard/Row"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "›"
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+
+
+[node name="PeerCard" type="PanelContainer" parent="Menu/SafeMargin/Pages/Room"]
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(0,80)
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Row" type="HBoxContainer" parent="Menu/SafeMargin/Pages/Room/PeerCard"]
+
+layout_mode = 2
+mouse_filter = 2
+
+theme_override_constants/separation = 14
+
+[node name="PeerAvatar" type="Control" parent="Menu/SafeMargin/Pages/Room/PeerCard/Row"]
+
 unique_name_in_owner = true
-visible = false
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(58,58)
+script = ExtResource("avatar")
+
+[node name="Player" type="VBoxContainer" parent="Menu/SafeMargin/Pages/Room/PeerCard/Row"]
+
+layout_mode = 2
+mouse_filter = 2
+
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="PeerName" type="Label" parent="Menu/SafeMargin/Pages/Room/PeerCard/Row/Player"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = ""
+theme_override_font_sizes/font_size = 29
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+text_overrun_behavior = 3
+
+[node name="PeerRole" type="Label" parent="Menu/SafeMargin/Pages/Room/PeerCard/Row/Player"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = ""
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+
+
+[node name="Arrow" type="Label" parent="Menu/SafeMargin/Pages/Room/PeerCard/Row"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "›"
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+
+
+[node name="SpaceAboveGame" type="Control" parent="Menu/SafeMargin/Pages/Room"]
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(0,32)
+
+[node name="GameCard" type="Control" parent="Menu/SafeMargin/Pages/Room"]
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(0,160)
+
+[node name="ChooseGame" type="Button" parent="Menu/SafeMargin/Pages/Room/GameCard"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = ""
+custom_minimum_size = Vector2(0,124)
+mouse_default_cursor_shape = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_top = 22.0
+theme_override_styles/normal = SubResource("Game")
+theme_override_styles/hover = SubResource("Selected")
+accessibility_name = "Seçilen oyun Dinamit. Oyunları göster."
+
+[node name="Icon" type="Control" parent="Menu/SafeMargin/Pages/Room/GameCard/ChooseGame"]
+
+layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 3
+custom_minimum_size = Vector2(0,0)
+layout_mode = 0
+offset_left = 8.0
+offset_top = 9.0
+offset_right = 138.0
+offset_bottom = 125.0
+
+[node name="GameName" type="Label" parent="Menu/SafeMargin/Pages/Room/GameCard/ChooseGame"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "DİNAMİT"
+theme_override_font_sizes/font_size = 46
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+layout_mode = 1
+anchor_left = 0.40
+anchor_right = 1.0
+offset_top = 24.0
+offset_right = -16.0
+theme_override_fonts/font = ExtResource("display")
+
+[node name="Mechanic" type="Label" parent="Menu/SafeMargin/Pages/Room/GameCard/ChooseGame"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Savur!   /   2 oyuncu"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+layout_mode = 1
+anchor_left = 0.42
+anchor_right = 1.0
+offset_top = 80.0
+
+[node name="Tag" type="PanelContainer" parent="Menu/SafeMargin/Pages/Room/GameCard"]
+
+layout_mode = 2
+mouse_filter = 2
+
+layout_mode = 1
+anchor_left = 0.16
+anchor_right = 0.84
+offset_bottom = 36.0
+theme_override_styles/panel = SubResource("Peach")
+
+[node name="Label" type="Label" parent="Menu/SafeMargin/Pages/Room/GameCard/Tag"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "SEÇİLEN OYUN"
+theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+horizontal_alignment = 1
+
+[node name="Space" type="Control" parent="Menu/SafeMargin/Pages/Room"]
+
+layout_mode = 2
+mouse_filter = 2
+
+size_flags_vertical = 3
+
+[node name="RoomStatus" type="Label" parent="Menu/SafeMargin/Pages/Room"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+text = ""
+theme_override_font_sizes/font_size = 14
+custom_minimum_size = Vector2(0,38)
 autowrap_mode = 3
+vertical_alignment = 1
+horizontal_alignment = 1
 
-[node name="ConnectionTest" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+[node name="StartGame" type="Button" parent="Menu/SafeMargin/Pages/Room"]
+
 unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "OYUNU BAŞLAT"
+custom_minimum_size = Vector2(0,64)
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PosterButton"
+
+
+[node name="LeaveRoom" type="Button" parent="Menu/SafeMargin/Pages/Room"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = "Lobiden ayrıl"
+custom_minimum_size = Vector2(0,44)
+mouse_default_cursor_shape = 2
+theme_type_variation = &"Quiet"
 visible = false
-custom_minimum_size = Vector2(0, 48)
-layout_mode = 2
-mouse_default_cursor_shape = 2
-text = "Bağlantı testi"
 
-[node name="ReduceMotion" type="CheckButton" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+[node name="Games" type="VBoxContainer" parent="Menu/SafeMargin/Pages"]
+
 unique_name_in_owner = true
+
 layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
+mouse_filter = 2
+
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+visible = false
+
+[node name="Title" type="Control" parent="Menu/SafeMargin/Pages/Games"]
+
+layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 1
+custom_minimum_size = Vector2(0,110)
+poster_title = "OYUNLAR"
+
+
+[node name="SelectDinamitPoster" type="Control" parent="Menu/SafeMargin/Pages/Games"]
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(0,142)
+
+[node name="SelectDinamit" type="Button" parent="Menu/SafeMargin/Pages/Games/SelectDinamitPoster"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = ""
+custom_minimum_size = Vector2(0,142)
 mouse_default_cursor_shape = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("poster_card")
+theme_override_styles/normal = SubResource("Selected")
+accessibility_name = "DİNAMİT Savur!"
+
+[node name="Icon" type="Control" parent="Menu/SafeMargin/Pages/Games/SelectDinamitPoster/SelectDinamit"]
+
+layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 3
+custom_minimum_size = Vector2(0,0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 7.0
+offset_right = 140.0
+offset_bottom = 137.0
+
+[node name="Name" type="Label" parent="Menu/SafeMargin/Pages/Games/SelectDinamitPoster/SelectDinamit"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "DİNAMİT"
+theme_override_font_sizes/font_size = 46
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+layout_mode = 1
+anchor_left = 0.40
+anchor_right = 1.0
+offset_top = 20.0
+theme_override_fonts/font = ExtResource("display")
+
+[node name="Subtitle" type="Label" parent="Menu/SafeMargin/Pages/Games/SelectDinamitPoster/SelectDinamit"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Savur!"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+layout_mode = 1
+anchor_left = 0.41
+anchor_right = 1.0
+offset_top = 84.0
+
+[node name="DengePreviewPoster" type="Control" parent="Menu/SafeMargin/Pages/Games"]
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(0,142)
+
+[node name="DengePreview" type="Button" parent="Menu/SafeMargin/Pages/Games/DengePreviewPoster"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = ""
+custom_minimum_size = Vector2(0,142)
+mouse_default_cursor_shape = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("poster_card")
+theme_override_styles/normal = SubResource("Game")
+disabled = true
+theme_override_styles/disabled = SubResource("Game")
+accessibility_name = "DENGE Eğ!  ·  Yakında"
+
+[node name="Icon" type="Control" parent="Menu/SafeMargin/Pages/Games/DengePreviewPoster/DengePreview"]
+
+layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 4
+custom_minimum_size = Vector2(0,0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 7.0
+offset_right = 140.0
+offset_bottom = 137.0
+
+[node name="Name" type="Label" parent="Menu/SafeMargin/Pages/Games/DengePreviewPoster/DengePreview"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "DENGE"
+theme_override_font_sizes/font_size = 46
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+layout_mode = 1
+anchor_left = 0.40
+anchor_right = 1.0
+offset_top = 20.0
+theme_override_fonts/font = ExtResource("display")
+
+[node name="Subtitle" type="Label" parent="Menu/SafeMargin/Pages/Games/DengePreviewPoster/DengePreview"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Eğ!  ·  Yakında"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+layout_mode = 1
+anchor_left = 0.41
+anchor_right = 1.0
+offset_top = 84.0
+
+[node name="CevirPreviewPoster" type="Control" parent="Menu/SafeMargin/Pages/Games"]
+
+layout_mode = 2
+mouse_filter = 2
+
+custom_minimum_size = Vector2(0,142)
+
+[node name="CevirPreview" type="Button" parent="Menu/SafeMargin/Pages/Games/CevirPreviewPoster"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+text = ""
+custom_minimum_size = Vector2(0,142)
+mouse_default_cursor_shape = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("poster_card")
+theme_override_styles/normal = SubResource("Game")
+disabled = true
+theme_override_styles/disabled = SubResource("Game")
+accessibility_name = "ÇEVİR Ters çevir!  ·  Yakında"
+
+[node name="Icon" type="Control" parent="Menu/SafeMargin/Pages/Games/CevirPreviewPoster/CevirPreview"]
+
+layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 5
+custom_minimum_size = Vector2(0,0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 7.0
+offset_right = 140.0
+offset_bottom = 137.0
+
+[node name="Name" type="Label" parent="Menu/SafeMargin/Pages/Games/CevirPreviewPoster/CevirPreview"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "ÇEVİR"
+theme_override_font_sizes/font_size = 46
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+layout_mode = 1
+anchor_left = 0.40
+anchor_right = 1.0
+offset_top = 20.0
+theme_override_fonts/font = ExtResource("display")
+
+[node name="Subtitle" type="Label" parent="Menu/SafeMargin/Pages/Games/CevirPreviewPoster/CevirPreview"]
+
+layout_mode = 2
+mouse_filter = 2
+
+text = "Ters çevir!  ·  Yakında"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
+theme_override_fonts/font = ExtResource("bold")
+layout_mode = 1
+anchor_left = 0.41
+anchor_right = 1.0
+offset_top = 84.0
+
+[node name="Space" type="Control" parent="Menu/SafeMargin/Pages/Games"]
+
+layout_mode = 2
+mouse_filter = 2
+
+size_flags_vertical = 3
+
+[node name="Settings" type="VBoxContainer" parent="Menu/SafeMargin/Pages"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+mouse_filter = 2
+
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+visible = false
+
+[node name="Title" type="Control" parent="Menu/SafeMargin/Pages/Settings"]
+
+layout_mode = 2
+mouse_filter = 2
+
+script = ExtResource("art")
+artwork = 1
+custom_minimum_size = Vector2(0,110)
+poster_title = "AYARLAR"
+
+
+[node name="ReduceMotion" type="CheckButton" parent="Menu/SafeMargin/Pages/Settings"]
+
+unique_name_in_owner = true
+
+layout_mode = 2
+
+custom_minimum_size = Vector2(0,52)
 text = "Hareketi azalt"
 
-[node name="Profile" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
+[node name="Transport" type="Label" parent="Menu/SafeMargin/Pages/Settings"]
+
+unique_name_in_owner = true
+
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 8
-unique_name_in_owner = true
-visible = false
 
-[node name="Title" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 36
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = "Avatar stüdyosu"
-
-[node name="Preview" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("Hero")
-
-[node name="EditorAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Preview"]
-layout_mode = 2
-mouse_filter = 2
-unique_name_in_owner = true
-custom_minimum_size = Vector2(144, 144)
-script = ExtResource("3_avatar")
-avatar = 0
-size_flags_horizontal = 4
-
-[node name="Options" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
-
-[node name="Color" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Options"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-mouse_default_cursor_shape = 2
-text = "Renk"
-size_flags_horizontal = 3
-
-[node name="Face" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Options"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-mouse_default_cursor_shape = 2
-text = "Yüz"
-size_flags_horizontal = 3
-
-[node name="Shuffle" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Options"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-mouse_default_cursor_shape = 2
-text = "Karıştır"
-
-[node name="PhotoActions" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Photo" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/PhotoActions"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-size_flags_horizontal = 3
-mouse_default_cursor_shape = 2
-text = "Galeriden fotoğraf seç"
-
-[node name="RemovePhoto" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/PhotoActions"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-mouse_default_cursor_shape = 2
-text = "Kaldır"
-visible = false
-
-[node name="PhotoHint" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
-text = "Fotoğraf önizlemen lobide ve ev sahibiysen yakındaki lobiler listesinde görünür."
-autowrap_mode = 3
-visible = false
-
-[node name="InputLabel" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
+text = "Yakındaki oyuncularla Bluetooth üzerinden bağlan."
 theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = "Takma ad"
-
-[node name="Nickname" type="LineEdit" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 52)
-placeholder_text = "Örn. Misket"
-max_length = 24
-
-[node name="EditorNotice" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
-text = ""
-unique_name_in_owner = true
-visible = false
 autowrap_mode = 3
 
-[node name="SaveProfile" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+[node name="ConnectionTest" type="Button" parent="Menu/SafeMargin/Pages/Settings"]
+
 unique_name_in_owner = true
+
 layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
+
+text = "BAĞLANTI TESTİ"
+custom_minimum_size = Vector2(0,52)
 mouse_default_cursor_shape = 2
-text = "Profili kaydet  →"
-theme_type_variation = &"PrimaryButton"
 
-[node name="Nearby" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
+
+[node name="Space" type="Control" parent="Menu/SafeMargin/Pages/Settings"]
+
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 12
-unique_name_in_owner = true
-visible = false
 
-[node name="Title" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby"]
+size_flags_vertical = 3
+
+[node name="Footer" type="Label" parent="Menu/SafeMargin/Pages/Settings"]
+
 layout_mode = 2
 mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 36
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = "Yakındaki lobiler"
 
-[node name="SearchCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("Card")
-
-[node name="SearchContent" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby/SearchCard"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
-
-[node name="NearbyStatus" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby/SearchCard/SearchContent"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 17
-theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
-text = "Yakındaki lobiler aranıyor."
-unique_name_in_owner = true
-autowrap_mode = 3
-
-[node name="RoomList" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Nearby/SearchCard/SearchContent"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 8
-unique_name_in_owner = true
-
-[node name="Room" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
-unique_name_in_owner = true
-visible = false
-
-[node name="Title" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 40
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = "Parti lobisi"
-
-[node name="RoomStatus" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 17
-theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
-text = ""
-unique_name_in_owner = true
-autowrap_mode = 3
-
-[node name="RoomMeter" type="ProgressBar" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-max_value = 2.0
-step = 0.0
-value = 1.0
-show_percentage = false
-accessibility_name = "Lobi doluluğu"
-
-[node name="LocalCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("Card")
-
-[node name="Row" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
-
-[node name="AvatarSlot" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row"]
-layout_mode = 2
-mouse_filter = 2
-custom_minimum_size = Vector2(60, 60)
-
-[node name="LocalAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row/AvatarSlot"]
-layout_mode = 1
-mouse_filter = 2
-unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 60)
-script = ExtResource("3_avatar")
-avatar = 0
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Player" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-
-[node name="LocalRole" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row/Player"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.85490, 0.73333, 0.97255, 1)
-text = ""
-unique_name_in_owner = true
-
-[node name="LocalName" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/LocalCard/Row/Player"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
+text = "POCKET PARTY\nTelefonunu kap. Partiye katıl."
 theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = ""
-unique_name_in_owner = true
-text_overrun_behavior = 3
+theme_override_fonts/font = ExtResource("bold")
+horizontal_alignment = 1
 
-[node name="PeerCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("Card")
+[node name="Back" type="Button" parent="Menu/SafeMargin/Pages"]
 
-[node name="Row" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
-
-[node name="AvatarSlot" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row"]
-layout_mode = 2
-mouse_filter = 2
-custom_minimum_size = Vector2(60, 60)
-
-[node name="PeerAvatar" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row/AvatarSlot"]
-layout_mode = 1
-mouse_filter = 2
-unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 60)
-script = ExtResource("3_avatar")
-avatar = 9
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Player" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-
-[node name="PeerRole" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row/Player"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.57647, 0.92941, 0.80000, 1)
-text = ""
 unique_name_in_owner = true
 
-[node name="PeerName" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/PeerCard/Row/Player"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = ""
-unique_name_in_owner = true
-text_overrun_behavior = 3
 
-[node name="GameCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("Hero")
-
-[node name="GameRow" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/GameCard"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
-custom_minimum_size = Vector2(0, 66)
-
-[node name="Game" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/GameCard/GameRow"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Heavy")
-theme_override_font_sizes/font_size = 23
-theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
-text = "Dinamit"
-size_flags_horizontal = 3
-
-[node name="Capacity" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room/GameCard/GameRow"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
-text = "2 oyuncu"
-
-[node name="StartGame" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 56)
+text = "←"
+custom_minimum_size = Vector2(0,48)
 mouse_default_cursor_shape = 2
-text = "Dinamit’i aç  →"
-theme_type_variation = &"PrimaryButton"
-
-[node name="LeaveRoom" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-mouse_default_cursor_shape = 2
-text = "Lobiden ayrıl"
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
+visible = false
+accessibility_name = "Geri"

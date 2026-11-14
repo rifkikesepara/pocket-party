@@ -11,6 +11,8 @@ const COLOR_NAMES: Array[String] = ["Bal", "Nane", "Leylak", "Çilek", "Gök", "
 @onready var editor: VBoxContainer = %Profile
 @onready var nearby: VBoxContainer = %Nearby
 @onready var room: VBoxContainer = %Room
+@onready var games: VBoxContainer = %Games
+@onready var settings: VBoxContainer = %Settings
 @onready var back: Button = %Back
 @onready var edit_profile: Button = %EditProfile
 @onready var host_button: Button = %Host
@@ -27,7 +29,6 @@ const COLOR_NAMES: Array[String] = ["Bal", "Nane", "Leylak", "Çilek", "Gök", "
 @onready var room_list: VBoxContainer = %RoomList
 @onready var nearby_status: Label = %NearbyStatus
 @onready var room_status: Label = %RoomStatus
-@onready var room_meter: ProgressBar = %RoomMeter
 @onready var local_avatar: PartyAvatar = %LocalAvatar
 @onready var peer_avatar: PartyAvatar = %PeerAvatar
 @onready var local_name: Label = %LocalName
@@ -36,7 +37,6 @@ const COLOR_NAMES: Array[String] = ["Bal", "Nane", "Leylak", "Çilek", "Gök", "
 @onready var peer_role: Label = %PeerRole
 @onready var start_game: Button = %StartGame
 @onready var leave_room: Button = %LeaveRoom
-@onready var page_scroll: ScrollContainer = %Scroll
 @onready var connection_test: Button = %ConnectionTest
 @onready var transport_hint: Label = %Transport
 @onready var photo_button: Button = %Photo
@@ -55,7 +55,7 @@ var _photo_picker: AvatarPhotoPicker
 var _page_tween: Tween
 var _avatar_tween: Tween
 var _peer_tween: Tween
-var _room_meter_tween: Tween
+var _keyboard_height: int = 0
 
 func _ready() -> void:
 	_profile.load_saved()
@@ -69,6 +69,9 @@ func _ready() -> void:
 	reduce_motion.toggled.connect(_change_motion_preference)
 	party_art.set("reduced_motion", _profile.reduced_motion)
 	edit_profile.pressed.connect(_show_profile)
+	(%SettingsButton as Button).pressed.connect(_show_page.bind(settings))
+	(%ChooseGame as Button).pressed.connect(_show_page.bind(games))
+	(%SelectDinamit as Button).pressed.connect(_show_page.bind(room))
 	host_button.pressed.connect(_require_profile.bind(_host_room))
 	search_button.pressed.connect(_require_profile.bind(_search_rooms))
 	back.pressed.connect(_navigate_back)
@@ -89,21 +92,41 @@ func _ready() -> void:
 	_apply_safe_area()
 	_show_home()
 
+func _process(_delta: float) -> void:
+	if not OS.has_feature("mobile"):
+		return
+	var keyboard_height: int = DisplayServer.virtual_keyboard_get_height()
+	if keyboard_height == _keyboard_height:
+		return
+	_keyboard_height = keyboard_height
+	# Keep the name and save action above the keyboard without scrolling the poster.
+	var typing_name: bool = editor.visible and _keyboard_height > 0
+	(editor.get_node("Title") as Control).visible = not typing_name
+	(editor.get_node("Preview") as Control).visible = not typing_name
+	(editor.get_node("PhotoActions") as Control).visible = not typing_name
+	(%Options as Control).visible = not typing_name and _draft_photo == null
+	photo_hint.visible = not typing_name and _draft_photo != null
+	_apply_safe_area()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if menu.visible and back.visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		_navigate_back()
 
 func _show_page(page: Control) -> void:
+	if page != editor and nickname.has_focus():
+		nickname.release_focus()
+		DisplayServer.virtual_keyboard_hide()
 	var changing: bool = not page.visible
 	if changing:
 		if _page_tween != null:
 			_page_tween.kill()
-		page_scroll.scroll_vertical = 0
 	home.visible = page == home
 	editor.visible = page == editor
 	nearby.visible = page == nearby
 	room.visible = page == room
+	games.visible = page == games
+	settings.visible = page == settings
 	back.visible = page != home
 	if changing:
 		page.modulate.a = 0.0 if not _profile.reduced_motion else 1.0
@@ -258,7 +281,8 @@ func _update_lobby() -> void:
 			_update_room_list()
 			nearby_status.text = "%s lobisine bağlanılıyor…" % lobby.peer_profile.nickname
 		PartyLobby.State.HOST, PartyLobby.State.GUEST:
-			_show_page(room)
+			if not games.visible:
+				_show_page(room)
 			_update_room()
 
 func _update_room_list() -> void:
@@ -295,14 +319,6 @@ func _update_room_list() -> void:
 func _update_room() -> void:
 	var host: bool = lobby.state == PartyLobby.State.HOST
 	var peer: PartyProfile = lobby.peer_profile
-	var occupancy: float = 1.0 if peer == null else 2.0
-	if _room_meter_tween != null:
-		_room_meter_tween.kill()
-	if _profile.reduced_motion:
-		room_meter.value = occupancy
-	else:
-		_room_meter_tween = create_tween()
-		_room_meter_tween.tween_property(room_meter, "value", occupancy, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	local_name.text = _profile.nickname
 	local_role.text = "Sen · Ev sahibi" if host else "Sen"
 	local_avatar.avatar = _profile.avatar
@@ -354,7 +370,9 @@ func _open_connection_test() -> void:
 	add_child(_game)
 
 func _navigate_back() -> void:
-	if editor.visible:
+	if games.visible:
+		_show_page(room)
+	elif editor.visible or settings.visible:
 		_after_profile = Callable()
 		_show_home()
 	else:
@@ -391,4 +409,5 @@ func _apply_safe_area() -> void:
 	safe_margin.add_theme_constant_override("margin_left", maxi(24, roundi(safe.position.x * ratio.x) + 16))
 	safe_margin.add_theme_constant_override("margin_top", maxi(24, roundi(safe.position.y * ratio.y) + 16))
 	safe_margin.add_theme_constant_override("margin_right", maxi(24, roundi(trailing.x * ratio.x) + 16))
-	safe_margin.add_theme_constant_override("margin_bottom", maxi(24, roundi(trailing.y * ratio.y) + 16))
+	var bottom_inset: int = maxi(trailing.y, _keyboard_height if editor.visible else 0)
+	safe_margin.add_theme_constant_override("margin_bottom", maxi(24, roundi(bottom_inset * ratio.y) + 16))

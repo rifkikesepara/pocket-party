@@ -130,7 +130,7 @@ func switch_to_lan() -> void:
 func _init_lan_network() -> void:
 	var default_id: int = 1 if OS.get_name() in ["iOS", "Android"] else 0
 	set_local_player_id(default_id)
-	var err: Error = _lan_udp.bind(LAN_PORT, "*")
+	var err: Error = _lan_udp.bind(LAN_PORT, "0.0.0.0")
 	if err == OK:
 		_lan_udp.set_broadcast_enabled(true)
 		is_lan_mode = true

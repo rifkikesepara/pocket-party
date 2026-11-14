@@ -3,243 +3,247 @@
 [ext_resource type="Script" path="res://minigames/dinamit/Dinamit.gd" id="1_dinamit"]
 [ext_resource type="Script" path="res://minigames/dinamit/DinamitArtwork.gd" id="2_artwork"]
 
+[ext_resource type="FontFile" path="res://assets/fonts/BarlowCondensed-ExtraBold.ttf" id="3_font"]
+[ext_resource type="Script" path="res://menu/PartyMenuArt.gd" id="4_poster"]
+[ext_resource type="Texture2D" path="res://assets/branding/pp-logo.svg" id="5_brand"]
+
 [sub_resource type="FontVariation" id="Font_heavy"]
-variation_embolden = 1.1
+base_font = ExtResource("3_font")
 
 [sub_resource type="StyleBoxFlat" id="score_local"]
 content_margin_left = 14.0
 content_margin_right = 14.0
 content_margin_top = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.15686, 0.12549, 0.18824, 1)
+bg_color = Color(1, 0.965, 0.875, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.30588, 0.23922, 0.34902, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_left = 16
-corner_radius_bottom_right = 16
+border_color = Color(1, 0.965, 0.875, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="score_peer"]
 content_margin_left = 14.0
 content_margin_right = 14.0
 content_margin_top = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.12549, 0.10980, 0.16471, 1)
+bg_color = Color(1, 0.965, 0.875, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.22745, 0.18824, 0.27059, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_left = 16
-corner_radius_bottom_right = 16
+border_color = Color(1, 0.965, 0.875, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="arena"]
 content_margin_left = 16.0
 content_margin_right = 16.0
 content_margin_top = 14.0
 content_margin_bottom = 14.0
-bg_color = Color(0.12941, 0.09804, 0.16471, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.28235, 0.21176, 0.29804, 1)
-corner_radius_top_left = 22
-corner_radius_top_right = 22
-corner_radius_bottom_left = 22
-corner_radius_bottom_right = 22
+bg_color = Color(0,0,0,0)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+border_color = Color(0.13235, 0.22412, 0.55706, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="footer"]
 content_margin_left = 16.0
 content_margin_right = 16.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
-bg_color = Color(0.14118, 0.11373, 0.17647, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.26667, 0.21176, 0.29804, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_left = 18
-corner_radius_bottom_right = 18
+bg_color = Color(0,0,0,0)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+border_color = Color(0.13235, 0.22412, 0.55706, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="drawer"]
 content_margin_left = 18.0
 content_margin_right = 18.0
 content_margin_top = 18.0
 content_margin_bottom = 18.0
-bg_color = Color(0.14510, 0.11373, 0.18824, 1)
+bg_color = Color(0.11275, 0.18981, 0.49824, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.44314, 0.36471, 0.48235, 1)
-corner_radius_top_left = 22
-corner_radius_top_right = 22
-corner_radius_bottom_left = 22
-corner_radius_bottom_right = 22
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(0.18824, 0.14510, 0.23137, 1)
+bg_color = Color(1, 0.965, 0.875, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.36863, 0.29020, 0.40784, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+border_color = Color(1, 0.965, 0.875, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button_hover"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(0.24706, 0.18824, 0.31373, 1)
+bg_color = Color(0.12765, 0.21588, 0.54294, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.56078, 0.44706, 0.62745, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button_pressed"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(0.30980, 0.22745, 0.38039, 1)
+bg_color = Color(0.13549, 0.22961, 0.56647, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.74118, 0.63529, 0.79608, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+border_color = Color(0.83000, 0.88000, 1.00000, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button_disabled"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(0.16078, 0.12941, 0.19216, 1)
+bg_color = Color(0.11588, 0.19529, 0.50765, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.26275, 0.21569, 0.29412, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+border_color = Color(0.13314, 0.22549, 0.55941, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button_primary"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(1.00000, 0.78824, 0.41176, 1)
+bg_color = Color(1, 0.965, 0.875, 1)
 border_width_left = 0
 border_width_top = 0
 border_width_right = 0
 border_width_bottom = 0
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button_primary_hover"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(1.00000, 0.85882, 0.58431, 1)
+bg_color = Color(1.00000, 0.74882, 0.51000, 1)
 border_width_left = 0
 border_width_top = 0
 border_width_right = 0
 border_width_bottom = 0
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button_primary_pressed"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(0.94902, 0.67451, 0.27843, 1)
+bg_color = Color(1.00000, 0.69000, 0.51000, 1)
 border_width_left = 0
 border_width_top = 0
 border_width_right = 0
 border_width_bottom = 0
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="input"]
 content_margin_left = 12.0
 content_margin_right = 12.0
 content_margin_top = 5.0
 content_margin_bottom = 5.0
-bg_color = Color(0.10196, 0.07843, 0.13333, 1)
+bg_color = Color(0.06000, 0.09000, 0.32000, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.41176, 0.33333, 0.44706, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="bar_bg"]
 content_margin_left = 0.0
 content_margin_right = 0.0
 content_margin_top = 0.0
 content_margin_bottom = 0.0
-bg_color = Color(0.25098, 0.19608, 0.27843, 1)
+bg_color = Color(0.12922, 0.21863, 0.54765, 1)
 border_width_left = 0
 border_width_top = 0
 border_width_right = 0
 border_width_bottom = 0
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_left = 4
-corner_radius_bottom_right = 4
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="bar_fill"]
 content_margin_left = 0.0
 content_margin_right = 0.0
 content_margin_top = 0.0
 content_margin_bottom = 0.0
-bg_color = Color(1.00000, 0.78824, 0.41176, 1)
+bg_color = Color(1.00000, 0.69000, 0.51000, 1)
 border_width_left = 0
 border_width_top = 0
 border_width_right = 0
 border_width_bottom = 0
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_left = 4
-corner_radius_bottom_right = 4
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="StyleBoxFlat" id="button_focus"]
 draw_center = false
@@ -247,43 +251,46 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.96471, 0.87059, 1.00000, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_left = 12
-corner_radius_bottom_right = 12
+border_color = Color(0.83000, 0.88000, 1.00000, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_left = 24
+corner_radius_bottom_right = 24
 
 [sub_resource type="Theme" id="Theme_dinamit"]
 default_font_size = 16
 Label/colors/font_color = Color(0.97255, 0.94118, 0.92549, 1)
-Button/colors/font_color = Color(0.97255, 0.94118, 0.92549, 1)
-Button/colors/font_hover_color = Color(0.97255, 0.94118, 0.92549, 1)
-Button/colors/font_pressed_color = Color(0.97255, 0.94118, 0.92549, 1)
-Button/colors/font_focus_color = Color(0.97255, 0.94118, 0.92549, 1)
-Button/colors/font_hover_pressed_color = Color(0.97255, 0.94118, 0.92549, 1)
-Button/colors/font_disabled_color = Color(0.76078, 0.69804, 0.77255, 1)
+Button/colors/font_color = Color(0.063, 0.082, 0.424, 1)
+Button/colors/font_hover_color = Color(0.063, 0.082, 0.424, 1)
+Button/colors/font_pressed_color = Color(0.063, 0.082, 0.424, 1)
+Button/colors/font_focus_color = Color(0.063, 0.082, 0.424, 1)
+Button/colors/font_hover_pressed_color = Color(0.063, 0.082, 0.424, 1)
+Button/colors/font_disabled_color = Color(0.83000, 0.88000, 1.00000, 1)
 Button/styles/normal = SubResource("button")
 Button/styles/hover = SubResource("button_hover")
 Button/styles/pressed = SubResource("button_pressed")
 Button/styles/disabled = SubResource("button_disabled")
 Button/styles/focus = SubResource("button_focus")
 PrimaryButton/base_type = &"Button"
-PrimaryButton/colors/font_color = Color(0.13725, 0.08627, 0.14118, 1)
-PrimaryButton/colors/font_hover_color = Color(0.13725, 0.08627, 0.14118, 1)
-PrimaryButton/colors/font_pressed_color = Color(0.13725, 0.08627, 0.14118, 1)
-PrimaryButton/colors/font_focus_color = Color(0.13725, 0.08627, 0.14118, 1)
-PrimaryButton/colors/font_hover_pressed_color = Color(0.13725, 0.08627, 0.14118, 1)
+PrimaryButton/colors/font_color = Color(0.063, 0.082, 0.424, 1)
+PrimaryButton/colors/font_hover_color = Color(0.063, 0.082, 0.424, 1)
+PrimaryButton/colors/font_pressed_color = Color(0.063, 0.082, 0.424, 1)
+PrimaryButton/colors/font_focus_color = Color(0.063, 0.082, 0.424, 1)
+PrimaryButton/colors/font_hover_pressed_color = Color(0.063, 0.082, 0.424, 1)
 PrimaryButton/styles/normal = SubResource("button_primary")
 PrimaryButton/styles/hover = SubResource("button_primary_hover")
 PrimaryButton/styles/pressed = SubResource("button_primary_pressed")
 PrimaryButton/fonts/font = SubResource("Font_heavy")
-PrimaryButton/font_sizes/font_size = 18
+PrimaryButton/font_sizes/font_size = 27
 LineEdit/colors/font_color = Color(0.97255, 0.94118, 0.92549, 1)
-LineEdit/colors/font_placeholder_color = Color(0.76078, 0.69804, 0.77255, 1)
+LineEdit/colors/font_placeholder_color = Color(0.83000, 0.88000, 1.00000, 1)
 LineEdit/styles/normal = SubResource("input")
 LineEdit/styles/focus = SubResource("button_focus")
 ProgressBar/styles/background = SubResource("bar_bg")
 ProgressBar/styles/fill = SubResource("bar_fill")
+
+Button/fonts/font = ExtResource("3_font")
+Button/font_sizes/font_size = 19
 
 [node name="Dinamit" type="Control"]
 layout_mode = 3
@@ -296,7 +303,7 @@ mouse_filter = 2
 theme = SubResource("Theme_dinamit")
 script = ExtResource("1_dinamit")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -304,7 +311,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.09020, 0.07059, 0.12157, 1)
+script = ExtResource("4_poster")
+artwork = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true
@@ -340,14 +348,15 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="Brand" type="Label" parent="MarginContainer/Shell/Screen/Header"]
+[node name="Brand" type="TextureRect" parent="MarginContainer/Shell/Screen/Header"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_fonts/font = SubResource("Font_heavy")
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.83137, 0.72549, 0.95294, 1)
-text = "POCKET PARTY"
+custom_minimum_size = Vector2(128, 46)
 size_flags_horizontal = 3
+texture_filter = 4
+texture = ExtResource("5_brand")
+expand_mode = 1
+stretch_mode = 4
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/Shell/Screen/Header"]
 unique_name_in_owner = true
@@ -364,24 +373,15 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Ana menü"
 
-[node name="Heading" type="VBoxContainer" parent="MarginContainer/Shell/Screen"]
+[node name="Heading" type="Control" parent="MarginContainer/Shell/Screen"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="Title" type="Label" parent="MarginContainer/Shell/Screen/Heading"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = SubResource("Font_heavy")
-theme_override_font_sizes/font_size = 55
-text = "DİNAMİT"
-
-[node name="Subtitle" type="Label" parent="MarginContainer/Shell/Screen/Heading"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
-text = "Sıcak patates  /  2 oyuncu"
+custom_minimum_size = Vector2(0, 106)
+script = ExtResource("4_poster")
+artwork = 1
+poster_title = "DİNAMİT"
 
 [node name="Scores" type="HBoxContainer" parent="MarginContainer/Shell/Screen"]
 layout_mode = 2
@@ -411,17 +411,21 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 13
-theme_override_colors/font_color = Color(0.83137, 0.72549, 0.95294, 1)
+
 text = "SEN"
 unique_name_in_owner = true
+
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
 
 [node name="LocalPlayer" type="Label" parent="MarginContainer/Shell/Screen/Scores/LocalCard/ScoreBody/Player"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+
 text = "Oyuncu 1"
 unique_name_in_owner = true
+
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
 
 [node name="LocalScore" type="Label" parent="MarginContainer/Shell/Screen/Scores/LocalCard/ScoreBody"]
 layout_mode = 2
@@ -431,6 +435,8 @@ theme_override_font_sizes/font_size = 30
 text = "0"
 unique_name_in_owner = true
 size_flags_vertical = 4
+
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
 
 [node name="PeerCard" type="PanelContainer" parent="MarginContainer/Shell/Screen/Scores"]
 layout_mode = 2
@@ -455,17 +461,21 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 13
-theme_override_colors/font_color = Color(0.53333, 0.90588, 0.83137, 1)
+
 text = "RAKİP"
 unique_name_in_owner = true
+
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
 
 [node name="PeerPlayer" type="Label" parent="MarginContainer/Shell/Screen/Scores/PeerCard/ScoreBody/Player"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+
 text = "Oyuncu 1"
 unique_name_in_owner = true
+
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
 
 [node name="PeerScore" type="Label" parent="MarginContainer/Shell/Screen/Scores/PeerCard/ScoreBody"]
 layout_mode = 2
@@ -475,6 +485,8 @@ theme_override_font_sizes/font_size = 30
 text = "0"
 unique_name_in_owner = true
 size_flags_vertical = 4
+
+theme_override_colors/font_color = Color(0.063, 0.082, 0.424, 1)
 
 [node name="Arena" type="PanelContainer" parent="MarginContainer/Shell/Screen"]
 layout_mode = 2
@@ -497,7 +509,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+theme_override_colors/font_color = Color(0.83000, 0.88000, 1.00000, 1)
 text = "TUR 01"
 unique_name_in_owner = true
 size_flags_horizontal = 3
@@ -507,7 +519,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
+theme_override_colors/font_color = Color(1.00000, 0.69000, 0.51000, 1)
 text = "●  HAZIR"
 unique_name_in_owner = true
 horizontal_alignment = 2
@@ -530,7 +542,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 13
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+theme_override_colors/font_color = Color(0.83000, 0.88000, 1.00000, 1)
 text = "FİTİL"
 unique_name_in_owner = true
 size_flags_horizontal = 3
@@ -540,7 +552,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
+theme_override_colors/font_color = Color(1.00000, 0.69000, 0.51000, 1)
 text = "—"
 unique_name_in_owner = true
 
@@ -577,7 +589,7 @@ autowrap_mode = 3
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+theme_override_colors/font_color = Color(0.83000, 0.88000, 1.00000, 1)
 text = "Fitil tükenmeden dinamiti rakibine gönder."
 unique_name_in_owner = true
 autowrap_mode = 3
@@ -617,7 +629,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.07059, 0.05098, 0.10196, 0.88)
+color = Color(0.06000, 0.09000, 0.32000, 0.88)
 
 [node name="Drawer" type="PanelContainer" parent="MarginContainer/Shell/Settings"]
 layout_mode = 1
@@ -688,7 +700,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+theme_override_colors/font_color = Color(0.83000, 0.88000, 1.00000, 1)
 text = "IP"
 unique_name_in_owner = true
 autowrap_mode = 3
@@ -718,7 +730,7 @@ text = "Bağlan"
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+theme_override_colors/font_color = Color(0.83000, 0.88000, 1.00000, 1)
 text = ""
 unique_name_in_owner = true
 autowrap_mode = 3

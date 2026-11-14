@@ -11,10 +11,10 @@ const TARGET_BROADCAST: int = 0xFF
 const COUNTDOWN_SEC: float = 3.0
 const MIN_FUSE_SEC: float = 8.0
 const MAX_FUSE_SEC: float = 16.0
-const WARM: Color = Color("#ffc969")
-const HOT: Color = Color("#ff6379")
-const COOL: Color = Color("#88e7d4")
-const NEUTRAL: Color = Color("#d4b9f3")
+const WARM: Color = Color("#ffac80")
+const HOT: Color = Color("#ff766a")
+const COOL: Color = Color("#e6ef28")
+const NEUTRAL: Color = Color("#fff6df")
 
 @onready var main_margin: MarginContainer = %MarginContainer
 @onready var screen: VBoxContainer = %Screen

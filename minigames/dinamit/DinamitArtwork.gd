@@ -1,6 +1,55 @@
 class_name DinamitArtwork
 extends Control
 
+var _model_view: SubViewport
+var _bundle: Node3D
+
+func _ready() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	_model_view = SubViewport.new()
+	_model_view.size = Vector2i(384, 256)
+	_model_view.transparent_bg = true
+	_model_view.own_world_3d = true
+	_model_view.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_model_view.msaa_3d = Viewport.MSAA_2X
+	add_child(_model_view)
+	var camera: Camera3D = Camera3D.new()
+	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	camera.size = 2.7
+	camera.position.z = 5.0
+	_model_view.add_child(camera)
+	camera.make_current()
+	var light: DirectionalLight3D = DirectionalLight3D.new()
+	light.rotation_degrees = Vector3(-25.0, -30.0, 0.0)
+	light.light_energy = 1.4
+	_model_view.add_child(light)
+	_bundle = Node3D.new()
+	_bundle.rotation_degrees = Vector3(16.0, -24.0, 0.0)
+	_model_view.add_child(_bundle)
+	for row: int in range(-1, 2):
+		_add_cylinder(0.28, 2.18, Vector3(0.0, row * 0.51, 0.0), Color("#ef5962"))
+		_add_cylinder(0.293, 0.55, Vector3(-0.08, row * 0.51, 0.0), Color("#19255c"))
+	RenderingServer.frame_post_draw.connect(queue_redraw, CONNECT_ONE_SHOT)
+
+func _add_cylinder(radius: float, length: float, origin: Vector3, paint: Color) -> void:
+	var cylinder: CylinderMesh = CylinderMesh.new()
+	cylinder.top_radius = radius
+	cylinder.bottom_radius = radius
+	cylinder.height = length
+	cylinder.radial_segments = 16
+	var material: StandardMaterial3D = StandardMaterial3D.new()
+	material.albedo_color = paint
+	material.roughness = 1.0
+	material.emission_enabled = true
+	material.emission = paint * 0.3
+	var instance: MeshInstance3D = MeshInstance3D.new()
+	instance.mesh = cylinder
+	instance.material_override = material
+	instance.position = origin
+	instance.rotation.z = PI * 0.5
+	_bundle.add_child(instance)
+
 const PAPER: Color = Color("#fff0db")
 const FUSE: Array[Vector2] = [
 	Vector2(60, -18), Vector2(63, -24), Vector2(57, -32),
@@ -98,23 +147,27 @@ func _draw() -> void:
 			shake = Vector2.ZERO
 		var zoom: float = _zoom * fit * (1.0 + glow * danger * 0.035)
 		draw_set_transform(center + _offset + shake, -0.38 + _spin, Vector2.ONE * zoom)
-		_draw_bundle(detail)
+		if _model_view == null:
+			_draw_bundle(detail)
+		else:
+			_draw_bundle(detail, true)
+			draw_texture_rect(_model_view.get_texture(), Rect2(-127, -84, 254, 168), false, Color(1, 1, 1, _opacity))
 		draw_set_transform(Vector2.ZERO)
 		if show_swipe:
 			_draw_swipe()
 
 func _draw_stage(center: Vector2, fit: float, color: Color, glow: float) -> void:
-	draw_circle(center, 93.0 * fit, Color(color, 0.06 + danger * 0.035), true, -1.0, true)
-	draw_arc(center, 93.0 * fit, 0.0, TAU, 64, Color(color, 0.20), 1.0, true)
-	draw_arc(center, 117.0 * fit, -1.31, 1.31, 38, Color(color, 0.18), 1.0, true)
-	draw_arc(center, 117.0 * fit, 1.83, 4.45, 38, Color(color, 0.18), 1.0, true)
+	var corners: PackedVector2Array = PackedVector2Array([
+		Vector2(-170, 35), Vector2(156, -105), Vector2(122, -47),
+		Vector2(168, -27), Vector2(-144, 104), Vector2(-103, 48),
+	])
+	for index: int in range(corners.size()):
+		corners[index] = center + corners[index] * fit
+	draw_colored_polygon(corners, Color("#ffac80"))
 	if fuse_lit:
-		draw_arc(center, 93.0 * fit, -PI * 0.5, -PI * 0.5 + TAU * fuse_fraction, 64, Color(color, 0.48 + glow * danger * 0.14), 2.0, true)
-	for index: int in range(12):
-		var ray: Vector2 = Vector2.from_angle(float(index) * TAU / 12.0)
-		draw_line(center + ray * 107.0 * fit, center + ray * 112.0 * fit, Color(color, 0.32), 1.0, true)
+		draw_arc(center, 100.0 * fit, -PI * 0.5, -PI * 0.5 + TAU * fuse_fraction, 64, Color(color, 0.7 + glow * danger * 0.14), 3.0, true)
 
-func _draw_bundle(detail: Color) -> void:
+func _draw_bundle(detail: Color, fuse_only: bool = false) -> void:
 	var line: PackedVector2Array = PackedVector2Array(FUSE)
 	if fuse_lit:
 		# The visible cord shortens from its tip toward the bundle.
@@ -128,6 +181,8 @@ func _draw_bundle(detail: Color) -> void:
 	else:
 		draw_polyline(line, Color(0.66, 0.50, 0.55, _opacity), 5.0, true)
 
+	if fuse_only:
+		return
 	_draw_stick(-31.0, Color("#df4f73"))
 	_draw_stick(30.0, Color("#a92451"))
 	_draw_stick(0.0, Color("#f56a7b"))

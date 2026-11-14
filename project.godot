@@ -15,9 +15,13 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Pocket Party"
-run/main_scene="res://menu/PartyMenu.tscn"
+run/main_scene="res://menu/Splash.tscn"
+boot_splash/bg_color=Color(0.0313726, 0.105882, 0.615686, 1)
+boot_splash/image="res://assets/branding/splash.png"
+boot_splash/fullsize=true
+boot_splash/use_filter=true
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.png"
+config/icon="res://assets/branding/pp-icon.png"
 
 [autoload]
 
@@ -34,4 +38,5 @@ window/handheld/orientation=1
 
 [rendering]
 
+environment/defaults/default_clear_color=Color(0.0313726, 0.105882, 0.615686, 1)
 textures/vram_compression/import_etc2_astc=true
