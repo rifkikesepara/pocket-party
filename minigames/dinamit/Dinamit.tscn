@@ -1,6 +1,289 @@
-[gd_scene load_steps=2 format=3 uid="uid://dinamit_minigame"]
+[gd_scene format=3 uid="uid://dinamit_minigame"]
 
 [ext_resource type="Script" path="res://minigames/dinamit/Dinamit.gd" id="1_dinamit"]
+[ext_resource type="Script" path="res://minigames/dinamit/DinamitArtwork.gd" id="2_artwork"]
+
+[sub_resource type="FontVariation" id="Font_heavy"]
+variation_embolden = 1.1
+
+[sub_resource type="StyleBoxFlat" id="score_local"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.15686, 0.12549, 0.18824, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.30588, 0.23922, 0.34902, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 16
+
+[sub_resource type="StyleBoxFlat" id="score_peer"]
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.12549, 0.10980, 0.16471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22745, 0.18824, 0.27059, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 16
+
+[sub_resource type="StyleBoxFlat" id="arena"]
+content_margin_left = 16.0
+content_margin_right = 16.0
+content_margin_top = 14.0
+content_margin_bottom = 14.0
+bg_color = Color(0.12941, 0.09804, 0.16471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.28235, 0.21176, 0.29804, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_left = 22
+corner_radius_bottom_right = 22
+
+[sub_resource type="StyleBoxFlat" id="footer"]
+content_margin_left = 16.0
+content_margin_right = 16.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.14118, 0.11373, 0.17647, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.26667, 0.21176, 0.29804, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_left = 18
+corner_radius_bottom_right = 18
+
+[sub_resource type="StyleBoxFlat" id="drawer"]
+content_margin_left = 18.0
+content_margin_right = 18.0
+content_margin_top = 18.0
+content_margin_bottom = 18.0
+bg_color = Color(0.14510, 0.11373, 0.18824, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.44314, 0.36471, 0.48235, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_left = 22
+corner_radius_bottom_right = 22
+
+[sub_resource type="StyleBoxFlat" id="button"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.18824, 0.14510, 0.23137, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.36863, 0.29020, 0.40784, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="button_hover"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.24706, 0.18824, 0.31373, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.56078, 0.44706, 0.62745, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="button_pressed"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.30980, 0.22745, 0.38039, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.74118, 0.63529, 0.79608, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="button_disabled"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.16078, 0.12941, 0.19216, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.26275, 0.21569, 0.29412, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="button_primary"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(1.00000, 0.78824, 0.41176, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="button_primary_hover"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(1.00000, 0.85882, 0.58431, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="button_primary_pressed"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.94902, 0.67451, 0.27843, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="input"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.10196, 0.07843, 0.13333, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.41176, 0.33333, 0.44706, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="bar_bg"]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.25098, 0.19608, 0.27843, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="bar_fill"]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1.00000, 0.78824, 0.41176, 1)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="button_focus"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96471, 0.87059, 1.00000, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="Theme" id="Theme_dinamit"]
+default_font_size = 16
+Label/colors/font_color = Color(0.97255, 0.94118, 0.92549, 1)
+Button/colors/font_color = Color(0.97255, 0.94118, 0.92549, 1)
+Button/colors/font_hover_color = Color(0.97255, 0.94118, 0.92549, 1)
+Button/colors/font_pressed_color = Color(0.97255, 0.94118, 0.92549, 1)
+Button/colors/font_focus_color = Color(0.97255, 0.94118, 0.92549, 1)
+Button/colors/font_hover_pressed_color = Color(0.97255, 0.94118, 0.92549, 1)
+Button/colors/font_disabled_color = Color(0.76078, 0.69804, 0.77255, 1)
+Button/styles/normal = SubResource("button")
+Button/styles/hover = SubResource("button_hover")
+Button/styles/pressed = SubResource("button_pressed")
+Button/styles/disabled = SubResource("button_disabled")
+Button/styles/focus = SubResource("button_focus")
+PrimaryButton/base_type = &"Button"
+PrimaryButton/colors/font_color = Color(0.13725, 0.08627, 0.14118, 1)
+PrimaryButton/colors/font_hover_color = Color(0.13725, 0.08627, 0.14118, 1)
+PrimaryButton/colors/font_pressed_color = Color(0.13725, 0.08627, 0.14118, 1)
+PrimaryButton/colors/font_focus_color = Color(0.13725, 0.08627, 0.14118, 1)
+PrimaryButton/colors/font_hover_pressed_color = Color(0.13725, 0.08627, 0.14118, 1)
+PrimaryButton/styles/normal = SubResource("button_primary")
+PrimaryButton/styles/hover = SubResource("button_primary_hover")
+PrimaryButton/styles/pressed = SubResource("button_primary_pressed")
+PrimaryButton/fonts/font = SubResource("Font_heavy")
+PrimaryButton/font_sizes/font_size = 18
+LineEdit/colors/font_color = Color(0.97255, 0.94118, 0.92549, 1)
+LineEdit/colors/font_placeholder_color = Color(0.76078, 0.69804, 0.77255, 1)
+LineEdit/styles/normal = SubResource("input")
+LineEdit/styles/focus = SubResource("button_focus")
+ProgressBar/styles/background = SubResource("bar_bg")
+ProgressBar/styles/fill = SubResource("bar_fill")
 
 [node name="Dinamit" type="Control"]
 layout_mode = 3
@@ -9,17 +292,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+theme = SubResource("Theme_dinamit")
 script = ExtResource("1_dinamit")
 
 [node name="Background" type="ColorRect" parent="."]
-unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.12, 0.14, 0.18, 1)
+mouse_filter = 2
+color = Color(0.09020, 0.07059, 0.12157, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true
@@ -29,110 +314,422 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 32
+theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 32
+theme_override_constants/margin_bottom = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="Shell" type="Control" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 14
+mouse_filter = 2
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "DİNAMİT (Sıcak Patates)"
-horizontal_alignment = 1
-
-[node name="PlayerLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Screen" type="VBoxContainer" parent="MarginContainer/Shell"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Oyuncu 0"
-horizontal_alignment = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
 
-[node name="RoleButton" type="Button" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
+[node name="Header" type="HBoxContainer" parent="MarginContainer/Shell/Screen"]
 layout_mode = 2
-focus_mode = 0
-text = "Rol Değiştir (Oyuncu 0 / 1)"
+mouse_filter = 2
+theme_override_constants/separation = 12
 
-[node name="TransportBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
+[node name="Brand" type="Label" parent="MarginContainer/Shell/Screen/Header"]
 layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.83137, 0.72549, 0.95294, 1)
+text = "POCKET PARTY"
+size_flags_horizontal = 3
+
+[node name="SettingsButton" type="Button" parent="MarginContainer/Shell/Screen/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Ayarlar"
+
+[node name="Heading" type="VBoxContainer" parent="MarginContainer/Shell/Screen"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Label" parent="MarginContainer/Shell/Screen/Heading"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 55
+text = "DİNAMİT"
+
+[node name="Subtitle" type="Label" parent="MarginContainer/Shell/Screen/Heading"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = "Sıcak patates  /  2 oyuncu"
+
+[node name="Scores" type="HBoxContainer" parent="MarginContainer/Shell/Screen"]
+layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="BleButton" type="Button" parent="MarginContainer/VBoxContainer/TransportBar"]
-unique_name_in_owner = true
+[node name="LocalCard" type="PanelContainer" parent="MarginContainer/Shell/Screen/Scores"]
 layout_mode = 2
+mouse_filter = 2
 size_flags_horizontal = 3
-focus_mode = 0
-text = "Bluetooth (BLE)"
+theme_override_styles/panel = SubResource("score_local")
 
-[node name="LanButton" type="Button" parent="MarginContainer/VBoxContainer/TransportBar"]
-unique_name_in_owner = true
+[node name="ScoreBody" type="HBoxContainer" parent="MarginContainer/Shell/Screen/Scores/LocalCard"]
 layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Player" type="VBoxContainer" parent="MarginContainer/Shell/Screen/Scores/LocalCard/ScoreBody"]
+layout_mode = 2
+mouse_filter = 2
 size_flags_horizontal = 3
-focus_mode = 0
-text = "Wi-Fi (LAN UDP)"
+size_flags_vertical = 4
+theme_override_constants/separation = 0
 
-[node name="IpLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
+[node name="LocalCaption" type="Label" parent="MarginContainer/Shell/Screen/Scores/LocalCard/ScoreBody/Player"]
 layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.83137, 0.72549, 0.95294, 1)
+text = "SEN"
+unique_name_in_owner = true
+
+[node name="LocalPlayer" type="Label" parent="MarginContainer/Shell/Screen/Scores/LocalCard/ScoreBody/Player"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = "Oyuncu 1"
+unique_name_in_owner = true
+
+[node name="LocalScore" type="Label" parent="MarginContainer/Shell/Screen/Scores/LocalCard/ScoreBody"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 30
+text = "0"
+unique_name_in_owner = true
+size_flags_vertical = 4
+
+[node name="PeerCard" type="PanelContainer" parent="MarginContainer/Shell/Screen/Scores"]
+layout_mode = 2
+mouse_filter = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("score_peer")
+
+[node name="ScoreBody" type="HBoxContainer" parent="MarginContainer/Shell/Screen/Scores/PeerCard"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Player" type="VBoxContainer" parent="MarginContainer/Shell/Screen/Scores/PeerCard/ScoreBody"]
+layout_mode = 2
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="PeerCaption" type="Label" parent="MarginContainer/Shell/Screen/Scores/PeerCard/ScoreBody/Player"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.53333, 0.90588, 0.83137, 1)
+text = "RAKİP"
+unique_name_in_owner = true
+
+[node name="PeerPlayer" type="Label" parent="MarginContainer/Shell/Screen/Scores/PeerCard/ScoreBody/Player"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = "Oyuncu 1"
+unique_name_in_owner = true
+
+[node name="PeerScore" type="Label" parent="MarginContainer/Shell/Screen/Scores/PeerCard/ScoreBody"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 30
+text = "0"
+unique_name_in_owner = true
+size_flags_vertical = 4
+
+[node name="Arena" type="PanelContainer" parent="MarginContainer/Shell/Screen"]
+layout_mode = 2
+mouse_filter = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("arena")
+
+[node name="Stage" type="VBoxContainer" parent="MarginContainer/Shell/Screen/Arena"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="StageTop" type="HBoxContainer" parent="MarginContainer/Shell/Screen/Arena/Stage"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="RoundLabel" type="Label" parent="MarginContainer/Shell/Screen/Arena/Stage/StageTop"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 14
-text = "IP: -"
-horizontal_alignment = 1
-
-[node name="LanBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = "TUR 01"
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="PeerIpInput" type="LineEdit" parent="MarginContainer/VBoxContainer/LanBar"]
-unique_name_in_owner = true
-layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Diğer cihaz IP (192.168.x.x)"
 
-[node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer/LanBar"]
+[node name="StageStatus" type="Label" parent="MarginContainer/Shell/Screen/Arena/Stage/StageTop"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
+text = "●  HAZIR"
+unique_name_in_owner = true
+horizontal_alignment = 2
+
+[node name="Artwork" type="Control" parent="MarginContainer/Shell/Screen/Arena/Stage"]
 unique_name_in_owner = true
 layout_mode = 2
-focus_mode = 0
-text = "Bağla"
+mouse_filter = 2
+custom_minimum_size = Vector2(0, 152)
+size_flags_vertical = 3
+clip_contents = true
+script = ExtResource("2_artwork")
 
-[node name="FuseBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 28)
+[node name="StageBottom" type="HBoxContainer" parent="MarginContainer/Shell/Screen/Arena/Stage"]
 layout_mode = 2
+mouse_filter = 2
+
+[node name="FuseLabel" type="Label" parent="MarginContainer/Shell/Screen/Arena/Stage/StageBottom"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = "FİTİL"
+unique_name_in_owner = true
+size_flags_horizontal = 3
+
+[node name="FuseValue" type="Label" parent="MarginContainer/Shell/Screen/Arena/Stage/StageBottom"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1.00000, 0.78824, 0.41176, 1)
+text = "—"
+unique_name_in_owner = true
+
+[node name="FuseBar" type="ProgressBar" parent="MarginContainer/Shell/Screen/Arena/Stage"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+custom_minimum_size = Vector2(0, 8)
+max_value = 1.0
+step = 0.0
 show_percentage = false
 
-[node name="HolderLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Footer" type="PanelContainer" parent="MarginContainer/Shell/Screen"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
+mouse_filter = 2
+theme_override_styles/panel = SubResource("footer")
+
+[node name="FooterBody" type="VBoxContainer" parent="MarginContainer/Shell/Screen/Footer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="HolderLabel" type="Label" parent="MarginContainer/Shell/Screen/Footer/FooterBody"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
 theme_override_font_sizes/font_size = 26
-text = "Bekleniyor..."
-horizontal_alignment = 1
-vertical_alignment = 1
+text = "Masayı hazırla"
+unique_name_in_owner = true
+autowrap_mode = 3
 
-[node name="TargetLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="HintLabel" type="Label" parent="MarginContainer/Shell/Screen/Footer/FooterBody"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = "Fitil tükenmeden dinamiti rakibine gönder."
+unique_name_in_owner = true
+autowrap_mode = 3
+
+[node name="StartButton" type="Button" parent="MarginContainer/Shell/Screen/Footer/FooterBody"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Turu başlat  →"
+theme_type_variation = &"PrimaryButton"
+
+[node name="PassButton" type="Button" parent="MarginContainer/Shell/Screen/Footer/FooterBody"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "↑  Fırlat"
+visible = false
+theme_type_variation = &"PrimaryButton"
+
+[node name="Settings" type="Control" parent="MarginContainer/Shell"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+mouse_filter = 0
+
+[node name="Scrim" type="ColorRect" parent="MarginContainer/Shell/Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07059, 0.05098, 0.10196, 0.88)
+
+[node name="Drawer" type="PanelContainer" parent="MarginContainer/Shell/Settings"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("drawer")
+
+[node name="DrawerBody" type="VBoxContainer" parent="MarginContainer/Shell/Settings/Drawer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="DrawerHeader" type="HBoxContainer" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DrawerTitle" type="Label" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/DrawerHeader"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_heavy")
+theme_override_font_sizes/font_size = 24
+text = "Ayarlar"
+size_flags_horizontal = 3
+
+[node name="CloseSettings" type="Button" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/DrawerHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Kapat"
+
+[node name="Connection" type="VBoxContainer" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Hedef: Oyuncu 1"
-horizontal_alignment = 1
+mouse_filter = 2
+theme_override_constants/separation = 8
 
-[node name="StatusLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="RoleButton" type="Button" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Rol değiştir"
+
+[node name="TransportBar" type="HBoxContainer" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="BleButton" type="Button" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection/TransportBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Bluetooth"
+size_flags_horizontal = 3
+
+[node name="LanButton" type="Button" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection/TransportBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Wi-Fi / LAN"
+size_flags_horizontal = 3
+
+[node name="IpLabel" type="Label" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = "IP"
+unique_name_in_owner = true
+autowrap_mode = 3
+
+[node name="LanBar" type="HBoxContainer" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Hazır"
-horizontal_alignment = 1
+mouse_filter = 2
+theme_override_constants/separation = 8
 
-[node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="PeerIpInput" type="LineEdit" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection/LanBar"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
-focus_mode = 0
-theme_override_font_sizes/font_size = 20
-text = "Turu Başlat"
+custom_minimum_size = Vector2(0, 48)
+size_flags_horizontal = 3
+placeholder_text = "Diğer cihazın IP adresi"
+max_length = 64
+
+[node name="ConnectButton" type="Button" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody/Connection/LanBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Bağlan"
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.76078, 0.69804, 0.77255, 1)
+text = ""
+unique_name_in_owner = true
+autowrap_mode = 3
+
+[node name="ReduceMotion" type="CheckButton" parent="MarginContainer/Shell/Settings/Drawer/DrawerBody"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Hareketi azalt"
+
+[node name="Flash" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1.00000, 0.82745, 0.66667, 0)
+visible = false
