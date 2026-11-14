@@ -11,8 +11,12 @@ ios.debug.arm64 = "res://addons/ble_ios/bin/libPocketPartyBLE.ios.template_relea
 [dependencies]
 
 ios.release = {
-	"CoreBluetooth.framework": ""
+	"CoreBluetooth.framework": "",
+	"PhotosUI.framework": "",
+	"ImageIO.framework": ""
 }
 ios.debug = {
-	"CoreBluetooth.framework": ""
+	"CoreBluetooth.framework": "",
+	"PhotosUI.framework": "",
+	"ImageIO.framework": ""
 }

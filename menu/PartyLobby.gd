@@ -90,7 +90,7 @@ func game_tag() -> int:
 func _prepare(profile: PartyProfile, role: int) -> bool:
 	if state != State.IDLE:
 		return false
-	if not PartyNetworkBridge.is_mock_mode and not PartyNetworkBridge.switch_to_ble():
+	if not PartyNetworkBridge.is_mock_mode and not PartyNetworkBridge.is_pc_ble_bridge_mode and not PartyNetworkBridge.switch_to_ble():
 		return false
 	_previous_player_id = PartyNetworkBridge.local_player_id
 	PartyNetworkBridge.set_local_player_id(role)

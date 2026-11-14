@@ -182,6 +182,8 @@ corner_radius_bottom_left = 13
 
 [sub_resource type="Theme" id="Theme_menu"]
 default_font_size = 16
+ProgressBar/styles/background = SubResource("Disabled")
+ProgressBar/styles/fill = SubResource("Primary")
 Button/colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
 Button/colors/font_hover_color = Color(1.00000, 0.94118, 0.90980, 1)
 Button/colors/font_pressed_color = Color(1.00000, 0.94118, 0.90980, 1)
@@ -328,9 +330,10 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("Hero")
 
 [node name="PartyArt" type="Control" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home/Hero"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
-custom_minimum_size = Vector2(0, 173)
+custom_minimum_size = Vector2(0, 195)
 clip_contents = true
 script = ExtResource("4_art")
 
@@ -405,6 +408,7 @@ mouse_default_cursor_shape = 2
 text = "Yakındaki lobiler  ›"
 
 [node name="Transport" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 14
@@ -430,10 +434,17 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Bağlantı testi"
 
+[node name="ReduceMotion" type="CheckButton" parent="Menu/SafeMargin/Layout/Scroll/Pages/Home"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Hareketi azalt"
+
 [node name="Profile" type="VBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 unique_name_in_owner = true
 visible = false
 
@@ -443,7 +454,7 @@ mouse_filter = 2
 theme_override_fonts/font = SubResource("Heavy")
 theme_override_font_sizes/font_size = 36
 theme_override_colors/font_color = Color(1.00000, 0.94118, 0.90980, 1)
-text = "Profilini oluştur"
+text = "Avatar stüdyosu"
 
 [node name="Preview" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
 layout_mode = 2
@@ -454,12 +465,13 @@ theme_override_styles/panel = SubResource("Hero")
 layout_mode = 2
 mouse_filter = 2
 unique_name_in_owner = true
-custom_minimum_size = Vector2(156, 156)
+custom_minimum_size = Vector2(144, 144)
 script = ExtResource("3_avatar")
 avatar = 0
 size_flags_horizontal = 4
 
 [node name="Options" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12
@@ -479,6 +491,42 @@ custom_minimum_size = Vector2(0, 48)
 mouse_default_cursor_shape = 2
 text = "Yüz"
 size_flags_horizontal = 3
+
+[node name="Shuffle" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Karıştır"
+
+[node name="PhotoActions" type="HBoxContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Photo" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/PhotoActions"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+text = "Galeriden fotoğraf seç"
+
+[node name="RemovePhoto" type="Button" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile/PhotoActions"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+mouse_default_cursor_shape = 2
+text = "Kaldır"
+visible = false
+
+[node name="PhotoHint" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
+text = "Fotoğraf bu cihazda görünür. Lobide çizgi avatarın kullanılır."
+autowrap_mode = 3
+visible = false
 
 [node name="InputLabel" type="Label" parent="Menu/SafeMargin/Layout/Scroll/Pages/Profile"]
 layout_mode = 2
@@ -576,6 +624,16 @@ theme_override_colors/font_color = Color(0.79608, 0.72157, 0.81176, 1)
 text = ""
 unique_name_in_owner = true
 autowrap_mode = 3
+
+[node name="RoomMeter" type="ProgressBar" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+max_value = 2.0
+step = 0.0
+value = 1.0
+show_percentage = false
+accessibility_name = "Lobi doluluğu"
 
 [node name="LocalCard" type="PanelContainer" parent="Menu/SafeMargin/Layout/Scroll/Pages/Room"]
 layout_mode = 2

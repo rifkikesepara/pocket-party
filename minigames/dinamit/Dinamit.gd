@@ -56,6 +56,7 @@ var lobby_tag: int = 0
 var lobby_local_name: String = ""
 var lobby_peer_name: String = ""
 var show_menu_button: bool = false
+var prefer_reduced_motion: bool = false
 
 var _countdown: float = 0.0
 var _countdown_digit: int = 0
@@ -97,6 +98,8 @@ func _ready() -> void:
 	menu_button.pressed.connect(func() -> void: leave_lobby_requested.emit())
 	close_settings.pressed.connect(_close_settings)
 	reduce_motion.toggled.connect(_on_reduce_motion_toggled)
+	reduce_motion.set_pressed_no_signal(prefer_reduced_motion)
+	artwork.reduced_motion = prefer_reduced_motion
 	start_button.pressed.connect(_on_start_button_pressed)
 	pass_button.pressed.connect(_pass_dynamite)
 	get_viewport().size_changed.connect(_apply_safe_area)

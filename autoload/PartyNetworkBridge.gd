@@ -10,6 +10,7 @@ signal lobby_packet_received(sender_id: int, target_id: int, room_id: int, paylo
 const PACKET_SIZE: int = 16
 const MOCK_BASE_PORT: int = 42420
 const LAN_PORT: int = 42425
+const PC_BLE_BRIDGE_PORT: int = 42426
 const LOBBY_PAYLOAD_MARKER: int = 0x80
 
 enum PacketType {
@@ -24,6 +25,7 @@ var is_host: bool = false
 var is_mock_mode: bool = false
 var is_lan_mode: bool = false
 var is_ble_mode: bool = false
+var is_pc_ble_bridge_mode: bool = false
 var connected_peers: Dictionary = {} # { player_id: { "name": String, "heading": float } }
 
 var _mock_udp: PacketPeerUDP = PacketPeerUDP.new()
@@ -36,6 +38,14 @@ func _ready() -> void:
 	_parse_cli_args()
 	if is_mock_mode:
 		_init_mock_network()
+	elif "--pc-ble-bridge" in OS.get_cmdline_user_args() and OS.get_name() == "Windows":
+		var err: Error = _lan_udp.bind(LAN_PORT, "127.0.0.1")
+		if err == OK:
+			is_pc_ble_bridge_mode = true
+			set_local_player_id(0)
+			print("[PartyNetworkBridge] PC BLE köprüsü: 127.0.0.1:%d → %d" % [LAN_PORT, PC_BLE_BRIDGE_PORT])
+		else:
+			push_error("[PartyNetworkBridge] PC BLE köprüsü için UDP %d açılamadı: %s" % [LAN_PORT, error_string(err)])
 	else:
 		_init_native_ble()
 
@@ -133,6 +143,11 @@ func _process(_delta: float) -> void:
 	if is_mock_mode and _mock_udp.get_available_packet_count() > 0:
 		var raw: PackedByteArray = _mock_udp.get_packet()
 		_on_raw_packet_arrived(raw)
+	elif is_pc_ble_bridge_mode:
+		while _lan_udp.get_available_packet_count() > 0:
+			var raw: PackedByteArray = _lan_udp.get_packet()
+			if _lan_udp.get_packet_port() == PC_BLE_BRIDGE_PORT:
+				_on_raw_packet_arrived(raw)
 	elif is_lan_mode:
 		while _lan_udp.get_available_packet_count() > 0:
 			var raw: PackedByteArray = _lan_udp.get_packet()
@@ -174,6 +189,9 @@ func _dispatch_raw_packet(packet: PackedByteArray) -> void:
 			if peer_id != _mock_port_id:
 				_mock_udp.set_dest_address("127.0.0.1", MOCK_BASE_PORT + peer_id)
 				_mock_udp.put_packet(packet)
+	elif is_pc_ble_bridge_mode:
+		_lan_udp.set_dest_address("127.0.0.1", PC_BLE_BRIDGE_PORT)
+		_lan_udp.put_packet(packet)
 	elif is_lan_mode:
 		_broadcast_lan_packet(packet)
 	elif _ble_plugin != null:

@@ -25,8 +25,10 @@ public:
 	void start_ble();
 	void stop_ble();
 	void send_ble_packet(const PackedByteArray &p_packet);
+	void pick_avatar_photo();
 
 	void _emit_packet_deferred(const PackedByteArray &p_packet);
+	void _emit_avatar_photo(const PackedByteArray &p_image, bool p_failed);
 	void _emit_peer_deferred(int64_t p_id, const String &p_name, int64_t p_rssi);
 };
 
